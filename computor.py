@@ -18,24 +18,19 @@ if __name__ == "__main__":
                 print_usage()
                 exit(0)
             elif arg == "--gui":
-                if len(sys.argv) >= i + 2:
+                if len(sys.argv) == i + 2:
                     equation = sys.argv[i + 1]
-                    calc = Calc(equation)
-                    if calc.parse() == True:
+                    calc = Calc()
+                    if calc.parse(equation) == True:
                         App(equation).mainloop()
-                        exit(0)
-                    else:
-                        print("Invalid format")
                         exit(0)
                 else:
                     App("").mainloop()
                     exit(0)
             else:
-                calc = Calc(arg)
-                if calc.parse() == True:
-                    calc.compute()
-                else:
-                    print("Invalid format")
+                calc = Calc()
+                if calc.parse(arg) == True:
+                    calc.calcul(arg, True)
                     exit(0)
             i = i + 1
     else:

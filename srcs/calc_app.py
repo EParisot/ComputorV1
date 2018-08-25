@@ -38,6 +38,7 @@ class Calc(object):
                 print("Degree : " + degree_val)
             else:
                 print("Result : " + reduced)
+        return (reduced, degree_val)
 
     def parse(self, equation):
         if len(equation) > 0 and \

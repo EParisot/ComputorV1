@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
 
+from srcs.ft_reduct import ft_reduct
+
 import re
 
 class Calc(object):
 
+    def __init__(self):
+        self.sum_list = []
+        self.variable = "None"
+
     def reduce(self, equation):
-        if "=" in equation:
-            #TODO Reduce equation
-            reduced = equation
-        else:
-            reduced = "None"
-        return (reduced)
+        reduced, reduced_list = ft_reduct(equation, self.variable)
+        if len(reduced_list) == 0:
+            print("Invalid value")
+        return(reduced)
     
     def degree(self, reduced):
-        if "=" in reduced:
+        if self.variable != "None":
             if "^2" in reduced:
                 degree_val = 2
             elif "^1" in reduced or "^0" in reduced or not ("^" in reduced):
@@ -29,9 +33,11 @@ class Calc(object):
         degree_val = self.degree(reduced)
         #TODO Calculate result
         if t_print == True:
-            print("Solving : " + equation)
-            print("Reduced form : " + reduced)
-            print("Degree : " + degree_val)
+            if self.variable != "None":
+                print("Reduced form : " + reduced)
+                print("Degree : " + degree_val)
+            else:
+                print("Result : " + reduced)
 
     def parse(self, equation):
         if len(equation) > 0 and \
@@ -39,17 +45,16 @@ class Calc(object):
            not ("i" in equation or "I" in equation):
             if self.check(equation) == True:
                 return (True)
-        else:
+        elif len(equation) > 0:
             print("Invalid Value")
             exit(0)
 
     def check(self, equation):
-        variable = None
         for char in equation:
             if re.match('^[a-zA-Z]+$', char):
-                if variable == None:
-                    variable = char
-                elif char != variable:
+                if self.variable == "None":
+                    self.variable = char
+                elif char != self.variable:
                     print("Only one variable supported")
                     exit(0)
         return (True)

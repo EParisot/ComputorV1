@@ -45,6 +45,8 @@ class Calc(object):
                 print("Result : " + reduced)
         return (reduced, degree_val, result)
 
+
+
     def parse(self, equation, gui):
         if len(equation) > 0 and \
            re.match('^[a-zA-Z0-9+-/*^= ]+$', equation) and \

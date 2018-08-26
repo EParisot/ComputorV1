@@ -2,18 +2,33 @@
 
 import re
 
-def ft_sum(deg_list, variable, deg):
+def ft_sum_deg_0(members_list):
+    i = 0
     res = 0
-    if deg != 0:
-        for elem in deg_list:
-            i = 0
-            for char in elem:
-                if char == variable:                            #Sum-up factors
-                    if re.match('^[+-]+$', elem[0:i]):
-                        res += int(elem[0:i] + "1")
-                    elif re.match('^[0-9+-]+$', elem[0:i]):
-                        res += int(elem[0:i])
-                i = i + 1
+    for elem in members_list:
+        if re.match('^[+-]+$', elem):
+            if elem[0] == "-" and \
+               i + 1 < len(members_list) and \
+               members_list[i + 1][0] == "-":                   #Turn "--" into "+" for next elem
+                members_list[i + 1] = members_list[i + 1].replace("-", "+")
+            res += 0
+        elif re.match('^[0-9+-]+$', elem):
+            res += int(elem)
+        i = i + 1
+    s_res = str(res)
+    return ("+" + s_res if res > 0 else s_res)
+
+def ft_sum_deg_1_2(members_list, variable, deg):
+    res = 0
+    for elem in members_list:
+        i = 0
+        for char in elem:
+            if char == variable:                            #Sum-up factors
+                if re.match('^[+-]+$', elem[0:i]):
+                    res += int(elem[0:i] + "1")
+                elif re.match('^[0-9+-]+$', elem[0:i]):
+                    res += int(elem[0:i])
+            i = i + 1
         if deg == 2:                                                
             if res != 0:
                 if res == 1:
@@ -32,17 +47,12 @@ def ft_sum(deg_list, variable, deg):
                 return ("+" + s_res + "X" if res > 0 else s_res + "X")
             else:
                 return (None)
+
+def ft_sum(members_list, variable, deg):
+    if deg != 0:
+        return (ft_sum_deg_1_2(members_list, variable, deg))
     elif deg == 0:                                              #Sum-up digits
-        for elem in deg_list:
-            if re.match('^[+-]+$', elem):
-                res += 0
-            elif re.match('^[0-9+-]+$', elem):
-                res += int(elem)
-        if res != 0:
-            s_res = str(res)
-            return ("+" + s_res if res > 0 else s_res)
-        else:
-            return (None)
+        return (ft_sum_deg_0(members_list))
     
 def ft_dispatch(member_list, variable):
     deg_0_list = []
@@ -56,7 +66,6 @@ def ft_dispatch(member_list, variable):
             deg_1_list.append(member)
         elif not ("^" in member) and not (variable in member):
             deg_0_list.append(member)
-
     deg_2 = ft_sum(deg_2_list, variable, 2)                     #Sum_up by degrees
     deg_1 = ft_sum(deg_1_list, variable, 1)
     deg_0 = ft_sum(deg_0_list, variable, 0)
@@ -67,7 +76,7 @@ def ft_dispatch(member_list, variable):
         ordered_list.append(deg_1)
     if deg_0:
         ordered_list.append(deg_0)
-
+        
     return(ordered_list)
 
 def ft_prod(member_list, variable):
@@ -139,7 +148,7 @@ def ft_reduct(equation, variable):
             reduced = "".join(map(str, reduced_list)) + "=0"
         else:
             reduced = "".join(map(str, reduced_list))
-    if reduced[0] == "+":
+    if len(reduced) > 0 and reduced[0] == "+":                  #remove first "+"
         reduced = reduced[1:]
     return(reduced, reduced_list)
     

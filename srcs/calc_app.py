@@ -47,9 +47,10 @@ class Calc(object):
 
     def parse(self, equation, gui):
         if len(equation) > 0 and \
-           re.match('^[a-zA-Z0-9+-/*^= ]+$', equation) and \
+           re.match("^[a-zA-Z0-9.+-/*^= ]+$", equation) and \
            any(char.isdigit() for char in equation) and \
-           not ("i" in equation or "I" in equation):
+           not ("i" in equation or "I" in equation) and \
+           not re.search('([*/][+-]{2})', equation):
             if self.check(equation, gui) == True:
                 return (True)
             else:

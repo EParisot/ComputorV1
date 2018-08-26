@@ -9,12 +9,6 @@ class Calc(object):
     def __init__(self):
         self.sum_list = []
         self.variable = "None"
-
-    def reduce(self, equation):
-        reduced, reduced_list = ft_reduct(equation, self.variable)
-        if len(reduced_list) == 0:
-            print("Invalid value")
-        return(reduced)
     
     def degree(self, reduced):
         if self.variable != "None":
@@ -28,35 +22,58 @@ class Calc(object):
             return("None")
         return(str(degree_val))
         
-    def calcul(self, equation, t_print):
-        reduced = self.reduce(equation)
+    def calcul(self, equation, gui):
+        reduced, reduced_list = ft_reduct(equation, self.variable)      #Process Calc
+        if len(reduced_list) == 0:
+            if gui == False: 
+                print("Invalid input")
+                exit(0)
+            else:
+                result = "Invalid input"
         degree_val = self.degree(reduced)
-        #TODO Calculate result
-        if t_print == True:
+        if degree_val == "None":
+            result = reduced
+            reduced = "None"
+        else:
+            #TODO Calculate result
+            result = ""
+        if gui == False:
             if self.variable != "None":
                 print("Reduced form : " + reduced)
                 print("Degree : " + degree_val)
             else:
                 print("Result : " + reduced)
-        return (reduced, degree_val)
+        return (reduced, degree_val, result)
 
-    def parse(self, equation):
+    def parse(self, equation, gui):
         if len(equation) > 0 and \
            re.match('^[a-zA-Z0-9+-/*^= ]+$', equation) and \
            not ("i" in equation or "I" in equation):
-            if self.check(equation) == True:
+            if self.check(equation, gui) == True:
                 return (True)
+            else:
+                return (False)
         elif len(equation) > 0:
-            print("Invalid Value")
-            exit(0)
+            if gui == True:
+                print("Invalid input")
+            return (False)
 
-    def check(self, equation):
+    def check(self, equation, gui):
         for char in equation:
             if re.match('^[a-zA-Z]+$', char):
                 if self.variable == "None":
                     self.variable = char
                 elif char != self.variable:
-                    print("Only one variable supported")
+                    if gui == False:
+                        print("Only one variable supported")
+                        exit(0)
+                    else:
+                        return (False)
+            if char == "=" and self.variable == "None":
+                if gui == False:
+                    print("Missing variable")
                     exit(0)
+                else:
+                    return (False)
         return (True)
         

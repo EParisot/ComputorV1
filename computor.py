@@ -21,7 +21,7 @@ if __name__ == "__main__":
                 if len(sys.argv) == i + 2:
                     equation = sys.argv[i + 1]
                     calc = Calc()
-                    if calc.parse(equation) == True:
+                    if calc.parse(equation, True) == True:
                         App(equation).mainloop()
                         exit(0)
                 else:
@@ -29,8 +29,8 @@ if __name__ == "__main__":
                     exit(0)
             else:
                 calc = Calc()
-                if calc.parse(arg) == True:
-                    calc.calcul(arg, True)
+                if calc.parse(arg, False) == True:
+                    calc.calcul(arg, False)
                     exit(0)
             i = i + 1
     else:

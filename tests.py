@@ -35,8 +35,6 @@ def bastard_tests(usage):
              "*42",
              "/42",
              "^42",
-             
-
              ]
     
     for test in tests:

@@ -10,7 +10,10 @@ def ft_sum_deg_0(members_list):
         elif re.match('^[0-9+-.]+$', elem):
             res += float(elem)
     s_res = str(res)
-    return ("+" + s_res if res > 0 else s_res)
+    if res != 0:
+        return ("+" + s_res if res > 0 else s_res)
+    else:
+        return (None)
 
 def ft_sum_deg_1_2(members_list, variable, deg):
     res = 0
@@ -22,14 +25,14 @@ def ft_sum_deg_1_2(members_list, variable, deg):
                     res += float(elem[0:i] + "1")
                 elif re.match('^[0-9+-.]+$', elem[0:i]):
                     res += float(elem[0:i])
-            i = i + 1
+            i += 1
     if deg == 2:                                                
         if res != 0:
             if res == 1:
                 s_res = ""
             else:
                 s_res = str(res)
-            return ("+" + s_res + "X^2" if res > 0 else s_res + "X^2")
+            return ("+" + s_res + variable + "^2" if res > 0 else s_res + variable + "^2")
         else:
             return (None)
     elif deg == 1:
@@ -38,7 +41,7 @@ def ft_sum_deg_1_2(members_list, variable, deg):
                 s_res = ""
             else:
                 s_res = str(res)
-            return ("+" + s_res + "X" if res > 0 else s_res + "X")
+            return ("+" + s_res + variable if res > 0 else s_res + variable)
         else:
             return (None)
 
@@ -68,7 +71,9 @@ def ft_dispatch(member_list, variable):
     if deg_1:
         ordered_list.append(deg_1)
     if deg_0:
-        ordered_list.append(deg_0)   
+        ordered_list.append(deg_0)
+    if len(ordered_list) == 0:
+        ordered_list.append("0")
     return(ordered_list)
 
 def ft_power(l_member, r_member, prefix):
@@ -127,22 +132,29 @@ def ft_split_prod(member_list, variable):
             if char == variable:
                 i = i + 1
         if re.search("[*/]", elem):
-            if i > 0:                                           #TODO make var product
-                if i == 1:
-                    pass
-                else:
-                    pass
-            else:                                               #TODO make simple product
+            if i >= 2:                                          #Prod degrees >= 2
+                pass #TODO
+            else:                                               #Prod degrees 0 and 1
                 j = 0
                 splited = []
+                var = ""
                 for char in elem:
                     if char in "*/" or j == 0:
                         k = j + 1
+                        var_start = -1
+                        var_end = 0
                         while (k < len(elem) and not(elem[k] in "*/")):
-                            k = k + 1
-                        splited.append(elem[j:k])
-                    j = j + 1
-                member_list[idx] = ft_prod_deg_0(splited)
+                            if i > 0 and elem[k] == variable:   #Grab variable
+                                var_start = k
+                                var_end = k
+                            k += 1
+                            if i > 0 and var_start != -1:
+                                var_end += 1
+                        splited.append(elem[j:k if var_start == -1 else var_start])
+                        if i > 0 and var_start != -1:           #Var to reintegrate
+                            var = elem[var_start:var_end]
+                    j += 1
+                member_list[idx] = ft_prod_deg_0(splited) + var
     member_list = ft_split_power(member_list)                   #Look for powers
     return(member_list)
 
@@ -154,22 +166,22 @@ def ft_split_sum(member, variable):
             j = i + 1
             while (j < len(member) and (not(member[j] in "+-") \
                     or member[j - 1] in "/*^")):
-                j = j + 1                                       #Between each "+" or "-" (not preceded by "/" or "*"):
+                j += 1                                       #Between each "+" or "-" (not preceded by "/" or "*"):
             signed = member[i:j]                                #Slice a single member
             if not(member[i] in "+-") and i == 0:
                 signed = "+" + signed                           #Append "+" if needed
             splited.append(signed)
             i = j - 1
-        i = i + 1
+        i += 1
     i = 0
     for elem in splited:
         if elem == "-" and \
            i + 1 < len(splited) and \
-           splited[i + 1][0] == "-":                       #Turn "--" into "+" for next elem
+           splited[i + 1][0] == "-":                            #Turn "--" into "+" for next elem
             splited[i + 1] = splited[i + 1].replace("-", "+")
             splited.pop(i)
-        i = i + 1
-    splited = ft_split_prod(splited, variable)              #Make member product
+        i += 1
+    splited = ft_split_prod(splited, variable)                  #Make member product
     if splited:
         return (splited)
     else:
@@ -182,8 +194,8 @@ def ft_calculate(equation, variable):
     if len(reduced_list) == 2:
         l_member = reduced_list[0]
         r_member = reduced_list[1]
-        reduced_list = ft_split_sum(l_member, variable)             #Split/Prod left members
-        r_member = ft_split_sum(r_member, variable)                 #Split/Prod right members
+        reduced_list = ft_split_sum(l_member, variable)         #Split/Prod left members
+        r_member = ft_split_sum(r_member, variable)             #Split/Prod right members
         if reduced_list or r_member:
             if len(reduced_list) > 0:
                 i = 0
@@ -192,7 +204,7 @@ def ft_calculate(equation, variable):
                         r_member[i] = "-" + elem[1:]        
                     elif elem[0] == "-":
                         r_member[i] = "+" + elem[1:]
-                    i = i + 1
+                    i += 1
             reduced_list += r_member                            #Merge members
             reduced_list = ft_dispatch(reduced_list, variable)  #Sum by degree
             if variable != "None":

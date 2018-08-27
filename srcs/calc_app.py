@@ -47,11 +47,12 @@ class Calc(object):
 
     def parse(self, equation, gui):
         if len(equation) > 0 and \
-           re.match("^[a-zA-Z0-9.+-/*^= ]+$", equation) and \
+           re.match("^[a-zA-Z0-9.+\-/*\^= ]+$", equation) and \
            any(char.isdigit() for char in equation) and \
-           not re.search('([*/][+-]{2})', equation) and \
-           not re.search('([*/][*/])', equation) and \
-           not re.search('([a-zA-Z][a-zA-Z])', equation):
+           not re.search("([*/][+\-]{2})", equation) and \
+           not re.search("([*/][*/])", equation) and \
+           not re.search("([a-zA-Z][a-zA-Z])", equation) and\
+           not re.search("[+\-*/\^]$", equation):
             equation = equation.replace(",", ".")
             if self.check(equation, gui) == True:
                 return (equation)

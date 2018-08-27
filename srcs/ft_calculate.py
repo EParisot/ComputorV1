@@ -73,13 +73,50 @@ def ft_dispatch(member_list, variable):
         
     return(ordered_list)
 
+def power(splited):
+    for idx, fact in enumerate(splited):
+        if "^" in fact:
+            i = 0
+            j = 1
+            for char in fact:
+                if char == "^":
+                    if char == "*" or char == "/":
+                        j += 1
+                    l_member = float(fact[j:i])
+                    r_member = float(fact[i + 1:])
+                    break
+                i += 1
+            i = r_member
+            res = l_member
+            if r_member != 0:
+                if r_member > 0:
+                    i = r_member - 1
+                elif r_member < 0:
+                    i = r_member + 1
+                while i:
+                    if r_member > 0:
+                        i -= 1
+                        res *= float(l_member)
+                    elif r_member < 0:
+                        i += 1
+                        res *= float(l_member)
+                if r_member < 0:
+                    res = 1 / res
+            else:
+                res = 1
+            splited[idx] = fact[:j] + str(res)
+    return(splited)
+
 def ft_prod_deg_0(splited):
     res = 1
+    for fact in splited:
+        if "^" in fact:
+            splited = power(splited)
     for idx, fact in enumerate(splited):
         if fact[0] == "*" or idx == 0:
             res *= float(fact[1 if idx != 0 else 0:])
-        elif fact[0] == "/" or idx == 0:
-            res /= float(fact[1 if idx != 0 else 0:])
+        elif fact[0] == "/":
+            res /= float(fact[1:])   
     return(str(res))
 
 def ft_split_prod(member_list, variable):
@@ -88,7 +125,7 @@ def ft_split_prod(member_list, variable):
         for char in elem:                                       #Count vars
             if char == variable:
                 i = i + 1
-        if "*" in elem or "/" in elem:
+        if re.search("[*/]", elem):
             if i > 0:                                           #TODO make var product
                 if i == 1:
                     pass
@@ -105,6 +142,7 @@ def ft_split_prod(member_list, variable):
                         splited.append(elem[j:k])
                     j = j + 1
                 member_list[idx] = ft_prod_deg_0(splited)
+    member_list = power(member_list)
     return(member_list)
 
 def ft_split_sum(member, variable):
@@ -113,7 +151,8 @@ def ft_split_sum(member, variable):
     while (i < len(member)):
         if member[i] in "+-" or i == 0:
             j = i + 1
-            while (j < len(member) and (not(member[j] in "+-") or member[j - 1] in "/*")):
+            while (j < len(member) and (not(member[j] in "+-") \
+                    or member[j - 1] in "/*^")):
                 j = j + 1                                       #Between each "+" or "-" (not preceded by "/" or "*"):
             signed = member[i:j]                                #Slice a single member
             if not(member[i] in "+-") and i == 0:

@@ -26,6 +26,13 @@ def bastard_tests(usage):
              "42*£",
              "42+µ",
 
+             "42^",
+             "42*",
+             "42/",
+             "42+",
+             "42-",
+             
+
              ]
     
     for test in tests:
@@ -35,8 +42,7 @@ def bastard_tests(usage):
             check = "\033[1;32;40m OK"
         else:
             check = "\033[1;31;40m NOK"
-        print("\t\033[1;36;40m " + test + " -> \033[1;33;40m" + out)
-        print("\t\t\t\t\t" + check)
+        print("\t\033[1;36;40m " + test + " -> \033[1;33;40m" + out + "\t\t" + check)
 
 ###########################################################
 def tests_deg_0():
@@ -77,29 +83,34 @@ def tests_deg_0():
              "3*7--42/2",
              "3*-7+42/2",
 
+             "2^4",
+             "2^-4",
+             "2^4/5",
+             "2*2^4*5",
+             
              "4/56.8*-43/12.4--45.678*0.2",
-              
              ]
 
     for test in tests:
-        result = subprocess.run(["python", "computor.py", test], shell=True, stdout=subprocess.PIPE)
+        test = test.replace(",", ".")
+        result = subprocess.run(["python", "computor.py", test], stdout=subprocess.PIPE)
         out = result.stdout.decode('utf-8').strip()
         if not("Error :" in out):
             try:
                 res = out.split(" : ")[1]
-                if float(res) == eval(test.replace(",", ".")):
+                real = eval(test.replace("^", "**"))
+                if float(res) == float(real):
                     check = "\033[1;32;40m OK"
                 else:
-                    check = "\033[1;31;40m NOK"
+                    check = "\033[1;31;40m NOK, expected : " + str(real)
             except SyntaxError:
                 if float(out.split(" : ")[1]) == 42 or float(out.split(" : ")[1]) == -42:
                     check = "\033[1;32;40m OK"
                 else:
-                    check = "\033[1;31;40m NOK"
+                    check = "\033[1;31;40m NOK, expected : " + str(real)
         else:
-            check = "\033[1;31;40m NOK"
-        print("\t\033[1;36;40m " + test + " -> \033[1;33;40m" + out)
-        print("\t\t\t\t\t" + check)
+            check = "\033[1;31;40m NOK, expected : " + str(real)
+        print("\t\033[1;36;40m " + test + " -> \033[1;33;40m" + out + "\t\t" + check)
 
 ###########################################################
 def tests_deg_1():

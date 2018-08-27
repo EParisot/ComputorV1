@@ -52,7 +52,8 @@ class Calc(object):
            not re.search("([*/][+\-]{2})", equation) and \
            not re.search("([*/][*/])", equation) and \
            not re.search("([a-zA-Z][a-zA-Z])", equation) and\
-           not re.search("[+\-*/\^]$", equation):
+           not re.search("[+\-*/\^]$", equation) and \
+           not re.search("^[*/\^]", equation):
             equation = equation.replace(",", ".")
             if self.check(equation, gui) == True:
                 return (equation)

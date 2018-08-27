@@ -51,12 +51,12 @@ def ft_sum(members_list, variable, deg):
     elif deg == 0:                                              #Sum-up digits
         return (ft_sum_deg_0(members_list))
     
-def ft_dispatch(member_list, variable):
+def ft_dispatch(members_list, variable):
     deg_0_list = []
     deg_1_list = []
     deg_2_list = []
     ordered_list = []
-    for member in member_list:                                  #Dispatch by degree
+    for member in members_list:                                  #Dispatch by degree
         if "^2" in member:
             deg_2_list.append(member)
         elif not ("^" in member) and variable in member:
@@ -97,8 +97,8 @@ def ft_power(l_member, r_member, prefix):
         res = 1
     return (prefix + str(res))
 
-def ft_split_power(splited):
-    for idx, fact in enumerate(splited):
+def ft_split_power(members_list):
+    for idx, fact in enumerate(members_list):
         if "^" in fact:
             i = 0
             j = 1
@@ -110,23 +110,23 @@ def ft_split_power(splited):
                     r_member = float(fact[i + 1:])
                     break
                 i += 1
-            splited[idx] = ft_power(l_member, r_member, fact[:j])
-    return(splited)
+            members_list[idx] = ft_power(l_member, r_member, fact[:j])
+    return(members_list)
 
-def ft_prod_deg_0(splited):
+def ft_prod_deg_0(members_list):
     res = 1
-    for fact in splited:
+    for fact in members_list:
         if "^" in fact:
-            splited = ft_split_power(splited)                   #Power first
-    for idx, fact in enumerate(splited):
+            splited = ft_split_power(members_list)                   #Power first
+    for idx, fact in enumerate(members_list):
         if fact[0] == "*" or idx == 0:
             res *= float(fact[1 if idx != 0 else 0:])
         elif fact[0] == "/":
             res /= float(fact[1:])   
     return(str(res))
 
-def ft_split_prod(member_list, variable):
-    for idx, elem in enumerate(member_list):
+def ft_split_prod(members_list, variable):
+    for idx, elem in enumerate(members_list):
         i = 0
         for char in elem:                                       #Count vars
             if char == variable:
@@ -154,9 +154,9 @@ def ft_split_prod(member_list, variable):
                         if i > 0 and var_start != -1:           #Var to reintegrate
                             var = elem[var_start:var_end]
                     j += 1
-                member_list[idx] = ft_prod_deg_0(splited) + var
-    member_list = ft_split_power(member_list)                   #Look for powers
-    return(member_list)
+                members_list[idx] = ft_prod_deg_0(splited) + var
+    members_list = ft_split_power(members_list)                   #Look for powers
+    return(members_list)
 
 def ft_split_sum(member, variable):
     splited = []

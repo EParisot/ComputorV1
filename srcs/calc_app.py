@@ -12,8 +12,10 @@ class Calc(object):
     
     def degree(self, reduced):
         if self.variable != "None":
-            if "^2" in reduced:
-                degree_val = 2
+            if re.search("([a-zA-Z][\^][2-9])", reduced):
+                for idx, char in enumerate(reduced):
+                    if char == "^":   
+                        degree_val = int(reduced[idx + 1])
             elif "^1" in reduced or "^0" in reduced or not ("^" in reduced):
                 degree_val = 1
             else:

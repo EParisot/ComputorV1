@@ -12,27 +12,27 @@ def print_usage():
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        i = 1
+        calc = Calc()
+        gui = False
         for arg in sys.argv[1:]:
             if arg in ("--usage", "--help"):
                 print_usage()
                 exit(0)
             elif arg == "--gui":
-                if len(sys.argv) == i + 2:
-                    equation = sys.argv[i + 1]
-                    calc = Calc()
-                    if calc.parse(equation, True) == True:
+                gui = True
+            else:
+                equation = calc.parse(arg, gui)
+                if equation:
+                    if gui:
                         App(equation).mainloop()
                         exit(0)
-                else:
-                    App("").mainloop()
-                    exit(0)
-            else:
-                calc = Calc()
-                if calc.parse(arg, False) == True:
-                    calc.calcul(arg, False)
-                    exit(0)
-            i = i + 1
+
+                    else:
+                        calc.calcul(equation, gui)
+                        exit(0)
+        if gui:
+            App("").mainloop()
+            exit(0)
     else:
         print_usage()
 

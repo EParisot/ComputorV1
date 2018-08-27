@@ -16,7 +16,13 @@ def bastard_tests(usage):
 
              "3*--4",
              "3/++4",
-
+             "3/++-4",
+             "3*+++4",
+             "42**4",
+             "42//3",
+             "3xx+2",
+             "3i+2",
+             "3xi-4",
              "42*£",
              "42+µ",
 
@@ -30,7 +36,7 @@ def bastard_tests(usage):
         else:
             check = "\033[1;31;40m NOK"
         print("\t\033[1;36;40m " + test + " -> \033[1;33;40m" + out)
-        print("\t\t\t\t\t\t\t\t" + check)
+        print("\t\t\t\t\t" + check)
 
 ###########################################################
 def tests_deg_0():
@@ -40,6 +46,8 @@ def tests_deg_0():
              "0+2",
              " - 4 2 ",
              "+ 42",
+             "4.2",
+             "4,2",
              
              "+42",
              "-42",
@@ -53,6 +61,7 @@ def tests_deg_0():
              "-44+2",
              "40--2",
              "40++2",
+             "4.2+37.8",
              
              "2*21",
              "2*-21",
@@ -61,7 +70,15 @@ def tests_deg_0():
              "42/2",
              "42/-2",
              "-42/2",
-             
+
+             "3*7+42/2",
+             "3*7+42/-2",
+             "3*+7+42/2",
+             "3*7--42/2",
+             "3*-7+42/2",
+
+             "4/56.8*-43/12.4--45.678*0.2",
+              
              ]
 
     for test in tests:
@@ -70,7 +87,7 @@ def tests_deg_0():
         if not("Error :" in out):
             try:
                 res = out.split(" : ")[1]
-                if float(res) == eval(test):
+                if float(res) == eval(test.replace(",", ".")):
                     check = "\033[1;32;40m OK"
                 else:
                     check = "\033[1;31;40m NOK"
@@ -82,7 +99,7 @@ def tests_deg_0():
         else:
             check = "\033[1;31;40m NOK"
         print("\t\033[1;36;40m " + test + " -> \033[1;33;40m" + out)
-        print("\t\t\t\t\t\t\t\t" + check)
+        print("\t\t\t\t\t" + check)
 
 ###########################################################
 def tests_deg_1():

@@ -135,7 +135,7 @@ def ft_split_sum(member, variable):
     else:
         return ([])
 
-def ft_reduct(equation, variable):
+def ft_calculate(equation, variable):
     reduced = "None"
     equation = equation.replace(" ", "")
     reduced_list = equation.split("=")                          #Split eq in 2

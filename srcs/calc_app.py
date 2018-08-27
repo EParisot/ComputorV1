@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from srcs.ft_reduct import ft_reduct
+from srcs.ft_calculate import ft_calculate
 
 import re
 
@@ -23,7 +23,7 @@ class Calc(object):
         return(str(degree_val))
         
     def calcul(self, equation, gui):
-        reduced, reduced_list = ft_reduct(equation, self.variable)      #Process Calc
+        reduced, reduced_list = ft_calculate(equation, self.variable)      #Process Calc
         if len(reduced_list) == 0:
             if gui == False: 
                 print("Error: Invalid input")
@@ -49,10 +49,12 @@ class Calc(object):
         if len(equation) > 0 and \
            re.match("^[a-zA-Z0-9.+-/*^= ]+$", equation) and \
            any(char.isdigit() for char in equation) and \
-           not ("i" in equation or "I" in equation) and \
-           not re.search('([*/][+-]{2})', equation):
+           not re.search('([*/][+-]{2})', equation) and \
+           not re.search('([*/][*/])', equation) and \
+           not re.search('([a-zA-Z][a-zA-Z])', equation):
+            equation = equation.replace(",", ".")
             if self.check(equation, gui) == True:
-                return (True)
+                return (equation)
             else:
                 return (False)
         else:
@@ -62,7 +64,7 @@ class Calc(object):
 
     def check(self, equation, gui):
         for char in equation:
-            if re.match('^[a-zA-Z]+$', char):
+            if re.match('^[a-zA-Z]+$', char) and char != "i" and char != "I":
                 if self.variable == "None":
                     self.variable = char
                 elif char != self.variable:
@@ -71,6 +73,12 @@ class Calc(object):
                         exit(0)
                     else:
                         return (False)
+            elif char == "i" or char == "I":
+                if gui == False:
+                    print("Error: 'i' or 'I' var forbidden")
+                    exit(0)
+                else:
+                    return (False)
             if char == "=" and self.variable == "None":
                 if gui == False:
                     print("Error: Missing variable")

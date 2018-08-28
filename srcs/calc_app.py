@@ -12,14 +12,14 @@ class Calc(object):
     
     def degree(self, reduced):
         if self.variable != "None":
-            if re.search("([a-zA-Z][\^][2-9])", reduced):
+            if re.search("([a-zA-Z][\^][2-4])", reduced):
                 for idx, char in enumerate(reduced):
                     if char == "^":   
                         degree_val = int(reduced[idx + 1])
-            elif "^1" in reduced or "^0" in reduced or not ("^" in reduced):
+            elif "^1" in reduced or (self.variable in reduced and not("^" in reduced)):
                 degree_val = 1
             else:
-                return("Error: Invalid Degree")
+                return ("None")
         else:
             return("None")
         return(str(degree_val))
@@ -40,9 +40,10 @@ class Calc(object):
             #TODO Calculate result
             result = ""
         if gui == False:
-            if self.variable != "None":
-                print("Reduced form : " + reduced)
+            if self.variable != "None" and degree_val != "None":
                 print("Degree : " + degree_val)
+                print("Reduced form : " + reduced)
+                print("Result : " + result)
             else:
                 print("Result : " + result)
         return (reduced, degree_val, result)
@@ -53,6 +54,7 @@ class Calc(object):
            any(char.isdigit() for char in equation) and \
            not re.search("([*/][+\-]{2})", equation) and \
            not re.search("([*/][*/])", equation) and \
+           not re.search("([+-][*/])", equation) and \
            not re.search("([a-zA-Z][a-zA-Z])", equation) and\
            not re.search("[+\-*/\^]$", equation) and \
            not re.search("^[*/\^]", equation):
@@ -77,6 +79,13 @@ class Calc(object):
                         exit(0)
                     else:
                         return (False)
+            elif re.search("([a-zA-Z][\^][5-9])", equation):
+                if gui == False:
+                    print("Error: Too high degree")
+                    exit(0)
+                else:
+                    return (False)
+                return (False)
             elif char == "i" or char == "I":
                 if gui == False:
                     print("Error: 'i' or 'I' var forbidden")

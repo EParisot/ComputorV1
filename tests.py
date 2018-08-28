@@ -4,7 +4,7 @@ import subprocess
 
 ###########################################################
 def bastard_tests(usage):
-    print("\n\t\033[1;37;40m  -Testing like a Bastard:\n")
+    print("\n\t\033[1;35;40m  -Testing like a Bastard:\n")
 
     tests = ["",
              "None",
@@ -14,6 +14,8 @@ def bastard_tests(usage):
              "+",
              "=",
 
+             "3+*4",
+             "3-**4",
              "3*--4",
              "3/++4",
              "3/++-4",
@@ -44,11 +46,11 @@ def bastard_tests(usage):
             check = "\033[1;32;40m OK"
         else:
             check = "\033[1;31;40m NOK"
-        print("\t\033[1;36;40m " + test + " -> \033[1;33;40m" + out + "\t\t" + check)
+        print("\033[1;36;40m " + test + " -> \033[1;33;40m" + out + "\t\t" + check)
 
 ###########################################################
 def tests_deg_0():
-    print("\n\t\033[1;37;40m  -Testing degree 0:\n")
+    print("\n\t\033[1;35;40m  -Testing degree 0:\n")
     #remember to use "42" or "-42" as wierd results (to avoid SyntaxError(s)) !
     tests = ["0",
              "0+2",
@@ -116,11 +118,33 @@ def tests_deg_0():
                     check = "\033[1;31;40m NOK, expected : " + str(real)
         else:
             check = "\033[1;31;40m NOK, expected : " + str(real)
-        print("\t\033[1;36;40m " + test + " -> \033[1;33;40m" + out + "\t\t" + check)
+        print("\033[1;36;40m " + test + " -> \033[1;33;40m" + out + "\t\t" + check)
 
 ###########################################################
 def tests_deg_1():
-    pass
+    print("\n\t\033[1;35;40m  -Testing degree 1:\n")
+    #remember to use "42" or "-42" as wierd results (to avoid SyntaxError(s)) !
+    tests = [["2x-2=8", "2.0x-10.0=0", "x=5.0"],
+             ["2x+4x-12=6", "6.0x-18.0=0", "x=3.0"],
+             ["2x^1+4x-12=6", "6.0x-18.0=0", "x=3.0"],
+             
+         ]
+    
+    for test in tests:
+        result = subprocess.run(["python", "computor.py", test[0]], stdout=subprocess.PIPE)
+        out = result.stdout.decode('utf-8')
+        if not("Error :" in out):
+            res_tab = out.split("\n")
+            reduced = res_tab[1].split(" : ")[1]
+            result = res_tab[2].split(" : ")[1]
+            if reduced == test[1] and result == test[2]:
+                check = "\033[1;32;40m OK"
+            else:
+                check = "\033[1;31;40m NOK, expected : " + test[1] + " ; " + test[2]
+        else:
+            check = "\033[1;31;40m NOK, expected : " + test[1] + " ; " + test[2]
+        print("\033[1;36;40m " + test[0] + " -> \033[1;33;40m" + out + "\t\t\t\t" + check)
+
 
 ###########################################################
 def tests_deg_2():

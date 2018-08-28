@@ -2,9 +2,10 @@
 
 import re
 
-def ft_sum_deg_0(members_list):
+def ft_sum_deg_0(members_list, variable):
     res = 0
-    for elem in members_list:
+    for elem in members_list:    
+        elem = elem.replace(variable + "^0", "")
         if re.match('^[+-]+$', elem):
             res += 0
         elif re.match('^[0-9+-.]+$', elem):
@@ -31,7 +32,10 @@ def ft_sum_deg(members_list, variable, deg):
             s_res = ""
         else:
             s_res = str(res)
-        return ("+" + s_res + variable + "^" + str(deg) if res > 0 else s_res + variable + "^" + str(deg))
+        if deg > 1:
+            return ("+" + s_res + variable + "^" + str(deg) if res > 0 else s_res + variable + "^" + str(deg))
+        else:
+            return ("+" + s_res + variable)
     else:
         return (None)
 
@@ -39,7 +43,7 @@ def ft_sum(members_list, variable, deg):
     if deg != 0:
         return (ft_sum_deg(members_list, variable, deg))
     elif deg == 0:                                                              #Sum-up digits
-        return (ft_sum_deg_0(members_list))
+        return (ft_sum_deg_0(members_list, variable))
     
 def ft_dispatch(members_list, variable):
     deg_0_list = []
@@ -55,9 +59,9 @@ def ft_dispatch(members_list, variable):
             deg_3_list.append(member)
         elif "^2" in member:
             deg_2_list.append(member)
-        elif not ("^" in member) and variable in member:
+        elif ("^1" in member or not ("^" in member)) and variable in member:
             deg_1_list.append(member)
-        elif not ("^" in member) and not (variable in member):
+        elif "^0" in member or (not ("^" in member) and not (variable in member)):
             deg_0_list.append(member)
         else:
             return ([])
@@ -147,7 +151,7 @@ def ft_split_prod_deg_0_1(elem, variable, i):
                     var_end += 1
             splited.append(elem[j:k if var_start == -1 else var_start])
             if i > 0 and var_start != -1:                                       #Var to reintegrate
-                var = elem[var_start:var_end]
+                var = elem[var_start]
         j += 1
     return (ft_prod_deg_0(splited) + var)
     

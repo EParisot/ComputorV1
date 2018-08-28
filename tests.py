@@ -37,6 +37,8 @@ def bastard_tests(usage):
              "*42",
              "/42",
              "^42",
+
+             "x^42",
              ]
     
     for test in tests:
@@ -106,7 +108,7 @@ def tests_deg_0():
         out = result.stdout.decode('utf-8').strip()
         if not("Error :" in out):
             try:
-                res = out.split(" : ")[1]
+                res = out.split(" : ")[1].replace("=0", "")
                 real = eval(test.replace("x^0", "").replace("^", "**"))
                 if float(res) == float(real):
                     check = "\033[1;32;40m OK"

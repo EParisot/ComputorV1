@@ -56,6 +56,7 @@ class Calc(object):
            not re.search("([*/][*/])", equation) and \
            not re.search("([+-][*/])", equation) and \
            not re.search("([a-zA-Z][a-zA-Z])", equation) and\
+           not re.search("([a-zA-Z][0-9])", equation) and\
            not re.search("[+\-*/\^]$", equation) and \
            not re.search("^[*/\^]", equation):
             equation = equation.replace(",", ".")
@@ -79,7 +80,7 @@ class Calc(object):
                         exit(0)
                     else:
                         return (False)
-            elif re.search("([a-zA-Z][\^][5-9])", equation):
+            elif re.search("([a-zA-Z][\^][5-9])", equation) or re.search("([a-zA-Z][\^][0-9]{2})", equation):
                 if gui == False:
                     print("Error: Too high degree")
                     exit(0)

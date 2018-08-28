@@ -130,7 +130,7 @@ def ft_prod_deg_0(members_list):
         if fact[0] == "*" or idx == 0:
             res *= float(fact[1 if idx != 0 else 0:])
         elif fact[0] == "/":
-            res /= float(fact[1:])   
+            res /= float(fact[1:])
     return(str(res))
 
 def ft_split_prod_01_var(elem, variable, i):
@@ -156,7 +156,48 @@ def ft_split_prod_01_var(elem, variable, i):
     return (ft_prod_deg_0(splited) + var)
     
 def ft_split_prod_more_vars(elem, variable, i):
-    pass #TODO
+    j = 0
+    splited = []
+    var = ""
+    var_power = None
+    for char in elem:
+        if char in "*/" or j == 0:
+            k = j + 1
+            var_start = -1
+            var_end = 0
+            while (k < len(elem) and not(elem[k] in "*/")):
+                if i > 0 and elem[k] == variable:                               #Grab variable
+                    var_start = k
+                    var_end = k
+                k += 1
+                if i > 0 and var_start != -1:
+                    var_end += 1
+            if var_power == None:
+                if elem[var_end - 2] == "^":
+                    var_power = int(elem[var_end - 1])
+                else:
+                    var_power = 1
+            factor = elem[j:k if var_start == -1 else var_start]
+            if not (variable in factor) and re.search("[0-9]", factor):
+                splited.append(factor)
+            if i > 0 and var_start != -1:                                       #Var to reintegrate
+                var = elem[var_start]
+                if elem[j] == "*":
+                    if variable + "^" in var:
+                        var_power += int(elem[var_end])
+                    else:
+                        var_power += 1
+                elif elem[j] == "/":
+                    if variable + "^" in var:
+                        var_power -= int(elem[var_end])
+                    else:
+                        var_power -= 1
+        j += 1
+    if var_power != 0 and var_power != 1:
+        var = var + "^" + str(var_power)
+    elif var_power == 0:
+        var = ""
+    return (ft_prod_deg_0(splited) + var)
 
 def ft_split_prod(members_list, variable):
     for idx, elem in enumerate(members_list):
@@ -221,7 +262,7 @@ def ft_calculate(equation, variable):
                     i += 1
             reduced_list += r_member                                            #Merge members
             reduced_list = ft_dispatch(reduced_list, variable)                  #Sum by degree
-            if "=" in equation:
+            if "=" in equation or [s for s in reduced_list if variable in s]:
                 reduced = "".join(map(str, reduced_list)) + "=0"
             else:
                 reduced = "".join(map(str, reduced_list))
@@ -230,7 +271,7 @@ def ft_calculate(equation, variable):
     else:
         reduced_list = ft_split_sum(reduced_list[0], variable)
         reduced_list = ft_dispatch(reduced_list, variable)
-        if "=" in equation:
+        if "=" in equation or [s for s in reduced_list if variable in s]:
             reduced = "".join(map(str, reduced_list)) + "=0"
         else:
             reduced = "".join(map(str, reduced_list))

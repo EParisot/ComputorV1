@@ -25,7 +25,7 @@ class Calc(object):
         return(str(degree_val))
         
     def calcul(self, equation, gui):
-        reduced, reduced_list = ft_calculate(equation, self.variable)      #Process Calc
+        reduced, reduced_list = ft_calculate(equation, self.variable)      #Process reduction / Calc
         if len(reduced_list) == 0:
             if gui == False: 
                 print("Error: Invalid input")
@@ -37,7 +37,7 @@ class Calc(object):
             result = reduced
             reduced = "None"
         else:
-            #TODO Calculate result
+            #TODO Calculate equation's result
             result = ""
         if gui == False:
             if self.variable != "None" and degree_val != "None":

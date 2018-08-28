@@ -95,7 +95,8 @@ def tests_deg_0():
              "2*2^4*5",
              "2*2^-4*5",
              "2/2^-4/5",
-             
+
+             "2x^0-12",
              "4/56.8*-43/12.4--45.678*0.2",
              ]
 
@@ -106,7 +107,7 @@ def tests_deg_0():
         if not("Error :" in out):
             try:
                 res = out.split(" : ")[1]
-                real = eval(test.replace("^", "**"))
+                real = eval(test.replace("x^0", "").replace("^", "**"))
                 if float(res) == float(real):
                     check = "\033[1;32;40m OK"
                 else:
@@ -127,6 +128,7 @@ def tests_deg_1():
     tests = [["2x-2=8", "2.0x-10.0=0", "x=5.0"],
              ["2x+4x-12=6", "6.0x-18.0=0", "x=3.0"],
              ["2x^1+4x-12=6", "6.0x-18.0=0", "x=3.0"],
+             ["2x^1+4x-12=12x", "-6.0x-12.0=0", "x=2.0"],
              
          ]
     

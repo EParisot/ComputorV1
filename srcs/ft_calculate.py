@@ -133,7 +133,7 @@ def ft_prod_deg_0(members_list):
             res /= float(fact[1:])   
     return(str(res))
 
-def ft_split_prod_deg_0_1(elem, variable, i):
+def ft_split_prod_01_var(elem, variable, i):
     j = 0
     splited = []
     var = ""
@@ -155,7 +155,7 @@ def ft_split_prod_deg_0_1(elem, variable, i):
         j += 1
     return (ft_prod_deg_0(splited) + var)
     
-def ft_split_prod_deg_2(elem, variable, i):
+def ft_split_prod_more_vars(elem, variable, i):
     pass #TODO
 
 def ft_split_prod(members_list, variable):
@@ -166,9 +166,9 @@ def ft_split_prod(members_list, variable):
                 i = i + 1
         if re.search("[*/]", elem):
             if i >= 2:                                                          #Prod degrees >= 2
-                members_list[idx] = ft_split_prod_deg_2(elem, variable, i)
+                members_list[idx] = ft_split_prod_more_vars(elem, variable, i)
             else:                                                               #Prod degrees 0 and 1
-                members_list[idx] = ft_split_prod_deg_0_1(elem, variable, i)
+                members_list[idx] = ft_split_prod_01_var(elem, variable, i)
     members_list = ft_split_power(members_list)                                 #Look for powers
     return(members_list)
 
@@ -221,7 +221,7 @@ def ft_calculate(equation, variable):
                     i += 1
             reduced_list += r_member                                            #Merge members
             reduced_list = ft_dispatch(reduced_list, variable)                  #Sum by degree
-            if variable != "None":
+            if "=" in equation:
                 reduced = "".join(map(str, reduced_list)) + "=0"
             else:
                 reduced = "".join(map(str, reduced_list))
@@ -230,7 +230,7 @@ def ft_calculate(equation, variable):
     else:
         reduced_list = ft_split_sum(reduced_list[0], variable)
         reduced_list = ft_dispatch(reduced_list, variable)
-        if variable != "None":
+        if "=" in equation:
             reduced = "".join(map(str, reduced_list)) + "=0"
         else:
             reduced = "".join(map(str, reduced_list))

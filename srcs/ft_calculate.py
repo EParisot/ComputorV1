@@ -173,7 +173,7 @@ def ft_split_prod_more_vars(elem, variable, i):
                 if i > 0 and var_start != -1:
                     var_end += 1
             if var_power == None:
-                if elem[var_end - 2] == "^":
+                if variable + "^" in elem[var_start:var_end]:
                     var_power = int(elem[var_end - 1])
                 else:
                     var_power = 1
@@ -183,13 +183,13 @@ def ft_split_prod_more_vars(elem, variable, i):
             if i > 0 and var_start != -1:                                       #Var to reintegrate
                 var = elem[var_start]
                 if elem[j] == "*":
-                    if variable + "^" in var:
-                        var_power += int(elem[var_end])
+                    if variable + "^" in elem[var_start:var_end]:
+                        var_power += int(elem[var_end - 1])
                     else:
                         var_power += 1
                 elif elem[j] == "/":
-                    if variable + "^" in var:
-                        var_power -= int(elem[var_end])
+                    if variable + "^" in elem[var_start:var_end]:
+                        var_power -= int(elem[var_end - 1])
                     else:
                         var_power -= 1
         j += 1

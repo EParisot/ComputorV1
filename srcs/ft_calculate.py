@@ -92,6 +92,25 @@ def ft_dispatch(members_list, variable):
         ordered_list.append("0")
     return(ordered_list)
 
+def ft_abs(number):
+    if number > 0:
+        return(number)
+    else:
+        return(-number)
+
+def ft_sqrt(number):
+    if number > 0:
+        prec = 1
+        i = 0
+        while (prec >= 0.0001):
+            while i * i <= number:
+                if ft_abs(i * i - number) < 0.001:
+                    return(i)
+                i += prec
+            i = 0
+            prec /= 10
+        return (0)
+
 def ft_power(l_member, r_member, prefix):
     i = r_member
     res = l_member
@@ -159,7 +178,10 @@ def ft_split_prod_01_var(elem, variable, i):
                     var_end += 1
             splited.append(elem[j:k if var_start == -1 else var_start])
             if i > 0 and var_start != -1:                                       #Var to reintegrate
-                var = elem[var_start]
+                if "^1" in var:
+                    var = elem[var_start]
+                else:
+                    var = elem[var_start:var_end]
         j += 1
     return (ft_prod_deg_0(splited) + var)
     

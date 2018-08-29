@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from srcs.ft_calculate import ft_calculate
+from srcs.ft_solve import ft_solve
 
 import re
 
@@ -33,20 +34,30 @@ class Calc(object):
             else:
                 result = "Error: Invalid input"
         degree_val = self.degree(reduced)
+        discr = ""
         if degree_val == "None":
             result = reduced
             reduced = "None"
         else:
-            #TODO Calculate equation's result
-            result = ""
+            discr, result = ft_solve(reduced, self.variable, int(degree_val))#Calculate equation's result
         if gui == False:
             if self.variable != "None" and degree_val != "None":
                 print("Degree : " + degree_val)
                 print("Reduced form : " + reduced)
-                print("Result : " + result)
+                if degree_val == "2":
+                    if discr > 0:
+                        discr = ">0"
+                    elif discr < 0:
+                        discr = "<0"
+                    elif discr == 0:
+                        discr = "=0"
+                    print("Discriminator : " + discr)
+                    print("Result(s) : " + result)
+                else:
+                    print("Result : " + result)
             else:
                 print("Result : " + result)
-        return (reduced, degree_val, result)
+        return (reduced, degree_val, discr, result)
 
     def parse(self, equation, gui):
         if len(equation) > 0 and \

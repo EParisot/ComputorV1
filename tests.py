@@ -132,12 +132,13 @@ def tests_deg_0():
 def tests_deg_1():
     print("\n\t\033[1;35;40m  -Testing degree 1:\n")
     #remember to use "42" or "-42" as wierd results (to avoid SyntaxError(s)) !
-    tests = [["2x-2=8", "2.0x-10.0=0", "x=5.0"],
-             ["2x+4x-12=6", "6.0x-18.0=0", "x=3.0"],
-             ["2x^1+4x-12=6", "6.0x-18.0=0", "x=3.0"],
-             ["2x^1+4x-12=12x", "-6.0x-12.0=0", "x=2.0"],
-             ["8x^0+42=-3x^1+2x+42", "x+8.0=0", "x=-8.0"],
-             ["4x^2/2x^1+4x-12=12x", "-6.0x-12.0=0", "x=2.0"],
+    tests = [["2x-2=8", "2.0x-10.0=0", "x= 5.0"],
+             ["2x+4x-12=6", "6.0x-18.0=0", "x= 3.0"],
+             ["2x^1+4x-12=6", "6.0x-18.0=0", "x= 3.0"],
+             ["2x^1+4x-12=12x", "-6.0x-12.0=0", "x= -2.0"],
+             ["8x^0+42=-3x^1+2x+42", "x+8.0=0", "x= -8.0"],
+             ["4x^2/2x^1+4x-12=12x", "-6.0x-12.0=0", "x= -2.0"],
+             ["4x^1/8=4", "0.5x-4.0=0", "x= 8.0"],
          ]
 
     res = 0
@@ -149,7 +150,7 @@ def tests_deg_1():
             reduced = res_tab[1].split(" : ")[1]
             result = res_tab[2].split(" : ")[1]
 
-            if reduced == test[1]:# and result == test[2]:
+            if reduced == test[1] and result == test[2]:
                 check = "\033[1;32;40m OK"
                 res += 1
             else:
@@ -168,7 +169,8 @@ def tests_deg_2():
              ["2x^2+4x-12=6", "2.0x^2+4.0x-18.0=0", ""],
              ["2x^2+4x-12=12x", "2.0x^2-8.0x-12.0=0", ""],
              ["8x^0+42=-3x^2+2x+42", "3.0x^2-2.0x+8.0=0", ""],
-             ["4x^3/2x^1+4x-12=12x", "2.0x^2-8.0x-12.0=0", ""], 
+             ["4x^3/2x^1+4x-12=12x", "2.0x^2-8.0x-12.0=0", ""],
+             ["4x^2/8=4", "0.5x^2-4.0=0", ""],
          ]
 
     res = 0
@@ -178,15 +180,15 @@ def tests_deg_2():
         if not("Error :" in out):
             res_tab = out.split("\r\n")
             reduced = res_tab[1].split(" : ")[1]
-            result = res_tab[2].split(" : ")[1]
+            result = res_tab[3].split(" : ")[1]
 
-            if reduced == test[1]:# and result == test[2]:
+            if reduced == test[1]:# and result == test[3]:
                 check = "\033[1;32;40m OK"
                 res += 1
             else:
-                check = "\033[1;31;40m NOK, expected : " + test[1] + " ; " + test[2]
+                check = "\033[1;31;40m NOK, expected : " + test[1] + " ; " + test[3]
         else:
-            check = "\033[1;31;40m NOK, expected : " + test[1] + " ; " + test[2]
+            check = "\033[1;31;40m NOK, expected : " + test[1] + " ; " + test[3]
         print("\033[1;36;40m " + test[0] + " -> \033[1;33;40m" + out + "\t\t\t\t" + check)
     return(res, len(tests))
 

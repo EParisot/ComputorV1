@@ -179,7 +179,7 @@ def ft_split_prod_01_var(elem, variable, i):
             splited.append(elem[j:k if var_start == -1 else var_start])
             if i > 0 and var_start != -1:                                       #Var to reintegrate
                 if "^1" in var:
-                    var = elem[var_start]
+                    var = elem[var_start]                   
                 else:
                     var = elem[var_start:var_end]
         j += 1

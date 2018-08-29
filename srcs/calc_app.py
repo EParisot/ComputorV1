@@ -104,7 +104,12 @@ class Calc(object):
                     exit(0)
                 else:
                     return (False)
-            if char == "=" and self.variable == "None":
+        var_count = 0
+        for char in equation:
+            if char == self.variable:
+                var_count += 1
+        if "=" in equation:
+            if self.variable == "None" or (var_count == 1 and self.variable + "^0" in equation):
                 if gui == False:
                     print("Error: Missing variable")
                     exit(0)

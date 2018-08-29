@@ -12,7 +12,11 @@ def ft_sum_deg_0(members_list, variable):
             res += float(elem)
     s_res = str(res)
     if res != 0:
-        return ("+" + s_res if res > 0 else s_res)
+        if res < 0:
+            sign = ""
+        else:
+            sign = "+"
+        return (sign + s_res if res > 0 else s_res)
     else:
         return (None)
 
@@ -32,10 +36,14 @@ def ft_sum_deg(members_list, variable, deg):
             s_res = ""
         else:
             s_res = str(res)
-        if deg > 1:
-            return ("+" + s_res + variable + "^" + str(deg) if res > 0 else s_res + variable + "^" + str(deg))
+        if res < 0:
+            sign = ""
         else:
-            return ("+" + s_res + variable)
+            sign = "+"
+        if deg > 1:
+            return (sign + s_res + variable + "^" + str(deg) if res > 0 else s_res + variable + "^" + str(deg))
+        else:
+            return (sign + s_res + variable)
     else:
         return (None)
 

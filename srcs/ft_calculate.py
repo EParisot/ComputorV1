@@ -272,40 +272,112 @@ def ft_split_sum(member, variable):
     else:
         return ([])
 
-def ft_calculate(equation, variable):
+def ft_iseven_par(member):
+    count = 0
+    for char in member:
+        if char in "()":
+            count += 1
+    return(True if count % 2 == 0 else False)
+
+def ft_calculate(equation, variable, is_par):
     reduced = "None"
     equation = equation.replace(" ", "")
-    reduced_list = equation.split("=")                                          #Split eq in 2
-    if len(reduced_list) == 2:
-        l_member = reduced_list[0]
-        r_member = reduced_list[1]
-        reduced_list = ft_split_sum(l_member, variable)                         #Split/Prod left members
-        r_member = ft_split_sum(r_member, variable)                             #Split/Prod right members
-        if reduced_list or r_member:
-            if len(reduced_list) > 0:
+    members_list = equation.split("=")                                          #Split eq in 2
+    for n, member in enumerate(members_list):                                   #Deal with '()'
+        while "(" in member and ")" in member:
+            for idx, char in enumerate(member):
+                if char == "(":
+                    i = 0
+                    start = idx + 1
+                    for idx, char in enumerate(member[start:]):
+                        if char == "(":
+                            i += 1
+                        elif char == ")" and i > 0:
+                            i -= 1
+                        elif char == ")" and i == 0:
+                            end = start + idx
+                            break
+            
+            reduced_par, reduced_list = ft_calculate(member[start:end], variable, True)
+            if len(ft_split_sum(reduced_par, variable)) > 1:
+                others = members_list[n].replace(member[start - 1:end + 1], "__").split("_")
+                if len(others[-1]) == 0:
+                    others.pop()
                 i = 0
-                for elem in r_member:                                           #Rev r_member's sign
-                    if elem[0] == "+":
-                        r_member[i] = "-" + elem[1:]        
-                    elif elem[0] == "-":
-                        r_member[i] = "+" + elem[1:]
-                    i += 1
-            reduced_list += r_member                                            #Merge members
-            reduced_list = ft_dispatch(reduced_list, variable)                  #Sum by degree
-            if "=" in equation or [s for s in reduced_list if variable in s]:
-                reduced = "".join(map(str, reduced_list)) + "=0"
+                for idx, other in enumerate(others):
+                    if len(other) == 0:
+                        i = idx
+                        break
+                j = 0
+                idx = 0
+                for other in others:
+                    if len(other) > 0:
+                        new_reduced_par = ft_split_sum(reduced_par, variable)
+                        if idx == i - 1:
+                            if not (other[-1] in "+-"):
+                                if other[0] == "(" and ft_iseven_par(other) == False:
+                                    other = other[1:]
+                                    if len(other) > 0:
+                                        if len(other) > 0 and other[0] != "-":
+                                            other = "+" + other
+                                        others[idx] = "("
+                                    for idx2, elem in enumerate(new_reduced_par):
+                                        if len(other) > 0 and not (other[-1] in "*/^"):
+                                            other = other + "*"
+                                        new_reduced_par[idx2] = other + elem
+                                if len(other) > 0:
+                                    others[i + 1] = "".join(map(str, new_reduced_par))
+                                    others.pop(i)
+                                    j += 1
+                        elif idx == i + 1:
+                            if not (other[0] in "+-"):
+                                if other[-1] == ")" and ft_iseven_par(other) == False:
+                                    other = other[:-1]
+                                    others[idx] = ")"
+                                for idx2, elem in enumerate(new_reduced_par):
+                                    new_reduced_par[idx2] = elem + other
+                                others[i] = "".join(map(str, new_reduced_par))
+                                others.pop(i + 1)
+                                j += 1
+                                break
+                    idx += 1
+                if j == 0:
+                    others[i] = member[start - 1:end + 1]
+                members_list[n] = "".join(map(str, others))
             else:
-                reduced = "".join(map(str, reduced_list))
+                members_list[n] = members_list[n].replace(member[start - 1:end + 1], reduced_par)
+            member = members_list[n]
+
+    if len(members_list) == 2:
+        l_member = members_list[0]
+        r_member = members_list[1]
+        l_member_list = ft_split_sum(l_member, variable)                        #Split/Prod left members
+        r_member_list = ft_split_sum(r_member, variable)                        #Split/Prod right members
+        if l_member_list or r_member_list:
+            if len(l_member_list) > 0:
+                i = 0
+                for elem in r_member_list:                                      #Rev r_member's sign
+                    if elem[0] == "+":
+                        r_member_list[i] = "-" + elem[1:]     
+                    elif elem[0] == "-":
+                        r_member_list[i] = "+" + elem[1:]
+                    i += 1
+            l_member_list += r_member_list                                      #Merge members
+            l_member_list = ft_dispatch(l_member_list, variable)                #Sum by degree
+            if "=" in equation or [s for s in l_member_list if variable in s] and is_par == False:
+                reduced = "".join(map(str, l_member_list)) + "=0"
+            else:
+                reduced = "".join(map(str, l_member_list))
         else:
             return("None", [])
     else:
-        reduced_list = ft_split_sum(reduced_list[0], variable)
-        reduced_list = ft_dispatch(reduced_list, variable)
-        if "=" in equation or [s for s in reduced_list if variable in s]:
-            reduced = "".join(map(str, reduced_list)) + "=0"
+        l_member_list = ft_split_sum(members_list[0], variable)
+        l_member_list = ft_dispatch(l_member_list, variable)
+        if "=" in equation or [s for s in l_member_list if variable in s] and is_par == False:
+            reduced = "".join(map(str, l_member_list)) + "=0"
         else:
-            reduced = "".join(map(str, reduced_list))
+            reduced = "".join(map(str, l_member_list))
     if len(reduced) > 0 and reduced[0] == "+":                                  #remove first "+"
         reduced = reduced[1:]
-    return(reduced, reduced_list)
+    return(reduced, l_member_list)
     

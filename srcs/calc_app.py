@@ -26,7 +26,7 @@ class Calc(object):
         return(str(degree_val))
         
     def calcul(self, equation, gui):
-        reduced, reduced_list = ft_calculate(equation, self.variable)      #Process reduction / Calc
+        reduced, reduced_list = ft_calculate(equation, self.variable, False)      #Process reduction / Calc
         if len(reduced_list) == 0:
             if gui == False: 
                 print("Error: Invalid input")
@@ -61,7 +61,7 @@ class Calc(object):
 
     def parse(self, equation, gui):
         if len(equation) > 0 and \
-           re.match("^[a-zA-Z0-9.+\-/*\^= ]+$", equation) and \
+           re.match("^[a-zA-Z0-9.+\-/*\^= \(\)]+$", equation) and \
            any(char.isdigit() for char in equation) and \
            not re.search("([*/][+\-]{2})", equation) and \
            not re.search("([*/][*/])", equation) and \
@@ -69,7 +69,10 @@ class Calc(object):
            not re.search("([a-zA-Z][a-zA-Z])", equation) and\
            not re.search("([a-zA-Z][0-9])", equation) and\
            not re.search("[+\-*/\^]$", equation) and \
-           not re.search("^[*/\^]", equation):
+           not re.search("^[*/\^]", equation) and \
+           not re.search("([\)][\(])", equation) and \
+           not re.search("([\)][0-9a-zA-Z])", equation) and \
+           not re.search("([0-9a-zA-Z][\(])", equation):
             equation = equation.replace(",", ".")
             if self.check(equation, gui) == True:
                 return (equation)
@@ -78,6 +81,7 @@ class Calc(object):
         else:
             if gui == False:
                 print("Error: Invalid input")
+                exit(0)
             return (False)
 
     def check(self, equation, gui):
@@ -115,5 +119,18 @@ class Calc(object):
                     exit(0)
                 else:
                     return (False)
+        o_par_count = 0
+        c_par_count = 0
+        for char in equation:
+            if char == "(":
+                o_par_count += 1
+            elif char == ")":
+                c_par_count += 1
+        if o_par_count != c_par_count:
+            if gui == False:
+                print("Error: Incorrect '()'")
+                exit(0)
+            else:
+                return (False)
         return (True)
         

@@ -279,11 +279,8 @@ def ft_iseven_par(member):
             count += 1
     return(True if count % 2 == 0 else False)
 
-def ft_calculate(equation, variable, is_par):
-    reduced = "None"
-    equation = equation.replace(" ", "")
-    members_list = equation.split("=")                                          #Split eq in 2
-    for n, member in enumerate(members_list):                                   #Deal with '()'
+def deal_with_par(members_list, variable):
+    for n, member in enumerate(members_list):
         while "(" in member and ")" in member:
             for idx, char in enumerate(member):
                 if char == "(":
@@ -302,9 +299,7 @@ def ft_calculate(equation, variable, is_par):
                 break
             reduced_par, reduced_list = ft_calculate(member[start:end], variable, True)
             if len(ft_split_sum(reduced_par, variable)) > 1:
-                #print(reduced_par)
                 others = members_list[n].replace(member[start - 1:end + 1], "__").split("_")
-                #print(others)
                 k = 0
                 for item, element in enumerate(others):
                     if len(element) == 0:
@@ -362,7 +357,13 @@ def ft_calculate(equation, variable, is_par):
             else:
                 members_list[n] = members_list[n].replace(member[start - 1:end + 1], reduced_par)
             member = members_list[n]
+    return(members_list)
 
+def ft_calculate(equation, variable, is_par):
+    reduced = "None"
+    equation = equation.replace(" ", "")
+    members_list = equation.split("=")                                          #Split eq in 2
+    members_list = deal_with_par(members_list, variable)                        #Deal with '()'
     if len(members_list) == 2:
         l_member = members_list[0]
         r_member = members_list[1]

@@ -297,12 +297,20 @@ def ft_calculate(equation, variable, is_par):
                         elif char == ")" and i == 0:
                             end = start + idx
                             break
-            
+            if not ("(" in member[1:-1] or ")" in member[1:-1]):
+                members_list[n] = member[1:-1]
+                break
             reduced_par, reduced_list = ft_calculate(member[start:end], variable, True)
             if len(ft_split_sum(reduced_par, variable)) > 1:
+                #print(reduced_par)
                 others = members_list[n].replace(member[start - 1:end + 1], "__").split("_")
-                if len(others[-1]) == 0:
-                    others.pop()
+                #print(others)
+                k = 0
+                for item, element in enumerate(others):
+                    if len(element) == 0:
+                        if k != 0:
+                            others.pop(item)
+                        k += 1
                 i = 0
                 for idx, other in enumerate(others):
                     if len(other) == 0:
@@ -317,29 +325,36 @@ def ft_calculate(equation, variable, is_par):
                             if not (other[-1] in "+-"):
                                 if other[0] == "(" and ft_iseven_par(other) == False:
                                     other = other[1:]
-                                    if len(other) > 0:
-                                        if len(other) > 0 and other[0] != "-":
-                                            other = "+" + other
-                                        others[idx] = "("
+                                    others[idx] = "("
+                                if len(other) > 0 and other[0] != "-":
+                                    other = "+" + other
+                                if len(other) > 0:
                                     for idx2, elem in enumerate(new_reduced_par):
                                         if len(other) > 0 and not (other[-1] in "*/^"):
                                             other = other + "*"
                                         new_reduced_par[idx2] = other + elem
-                                if len(other) > 0:
-                                    others[i + 1] = "".join(map(str, new_reduced_par))
-                                    others.pop(i)
+                                    others[i] = "".join(map(str, new_reduced_par))
+                                    if others[i - 1 if i - 1 >= 0 else 0] != "(":
+                                        others.pop(i - 1)
                                     j += 1
+                            else:
+                                others[i] = reduced_par
+                                member = members_list[n] = "".join(map(str, others))
                         elif idx == i + 1:
-                            if not (other[0] in "+-"):
+                            if not (other[0] in "+-)"):
                                 if other[-1] == ")" and ft_iseven_par(other) == False:
                                     other = other[:-1]
                                     others[idx] = ")"
-                                for idx2, elem in enumerate(new_reduced_par):
-                                    new_reduced_par[idx2] = elem + other
-                                others[i] = "".join(map(str, new_reduced_par))
-                                others.pop(i + 1)
-                                j += 1
-                                break
+                                if len(other) > 0:
+                                    for idx2, elem in enumerate(new_reduced_par):
+                                        new_reduced_par[idx2] = elem + other
+                                    others[i] = "".join(map(str, new_reduced_par))
+                                    others.pop(i + 1)
+                                    j += 1
+                            elif other[0] in "+-":
+                                others[i] = reduced_par
+                                member = members_list[n] = "".join(map(str, others))
+                            break
                     idx += 1
                 if j == 0:
                     others[i] = member[start - 1:end + 1]

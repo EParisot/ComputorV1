@@ -12,6 +12,11 @@ def ft_discriminator(reduced, variable):
         if variable in elem:
             splited_elem = elem.split(variable)
             if len(splited_elem) == 2:
+                for i, elem in enumerate(splited_elem):
+                    if elem == "-":
+                        splited_elem[i] = "-1"
+                    elif elem == "+":
+                        splited_elem[i] = "+1"
                 if splited_elem[1] == "":
                     tab[1] = float(splited_elem[0])
                 else:

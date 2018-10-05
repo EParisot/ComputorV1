@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import matplotlib as plt
+plt.use("TkAgg")
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+
 from srcs.calc_app import Calc
 
 import tkinter as tk
@@ -167,6 +172,23 @@ class App(tk.Tk):
 
     def insert_from_but(self, event):
         self.entry.insert("end", event.widget['text'])
+
+    def show_graph(self, reduced, calc):
+        fig = Figure(figsize=(5, 5), dpi=100)
+        a = fig.add_subplot(111)
+
+        def f(val):
+            variable = calc.variable
+            function = reduced.replace(variable, str(val)).split("=")[0]
+            return calc.calcul(function, False)
+        
+        x = [elem for elem in range(-9, 10)]
+        y = [f(elem)[-1] for elem in x]
+        a.plot(x, y)
+        
+        canvas = FigureCanvasTkAgg(fig, self.main_frame)
+        canvas.draw()
+        canvas.get_tk_widget().grid(column=1,row=1)
         
     def process(self, event):
         calc = Calc()
@@ -214,6 +236,9 @@ class App(tk.Tk):
 
                 result_val = tk.Label(self.infos_frame, textvariable=self.result, font=18)
                 result_val.grid(row=3, column=1)
+
+                if self.result != None:
+                    self.show_graph(self.reduced.get(), calc)
 
             else:
                 if self.infos_frame:

@@ -114,6 +114,7 @@ def ft_sqrt(number):
 def ft_power(l_member, r_member, prefix):
     i = r_member
     res = l_member
+    print(res)
     if r_member != 0:
         if r_member > 0:
             i = r_member - 1
@@ -136,7 +137,7 @@ def ft_split_power(members_list):
     for idx, fact in enumerate(members_list):
         if "^" in fact and not (re.search("([a-zA-Z][\^])", fact)):
             i = 0
-            j = 1
+            j = 0
             for char in fact:
                 if char == "^":
                     if char == "*" or char == "/":

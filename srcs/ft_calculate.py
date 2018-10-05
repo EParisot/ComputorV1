@@ -114,7 +114,6 @@ def ft_sqrt(number):
 def ft_power(l_member, r_member, prefix):
     i = r_member
     res = l_member
-    print(res)
     if r_member != 0:
         if r_member > 0:
             i = r_member - 1
@@ -139,9 +138,9 @@ def ft_split_power(members_list):
             i = 0
             j = 0
             for char in fact:
+                if char == "*" or char == "/":
+                    j += 1
                 if char == "^":
-                    if char == "*" or char == "/":
-                        j += 1
                     l_member = float(fact[j:i])
                     r_member = float(fact[i + 1:])
                     break

@@ -200,13 +200,13 @@ def tests_deg_2():
             reduced = res_tab[1].split(" : ")[1]
             result = res_tab[3].split(" : ")[1]
 
-            if reduced == test[1]:# and result == test[3]:
+            if reduced == test[1]:# and result == test[2]:
                 check = "\033[1;32;40m OK"
                 res += 1
             else:
-                check = "\033[1;31;40m NOK, expected : " + test[1] + " ; " + test[3]
+                check = "\033[1;31;40m NOK, expected : " + test[1] + " ; " + test[2]
         else:
-            check = "\033[1;31;40m NOK, expected : " + test[1] + " ; " + test[3]
+            check = "\033[1;31;40m NOK, expected : " + test[1] + " ; " + test[2]
         print("\033[1;36;40m " + test[0] + " -> \033[1;33;40m" + out + "\t\t\t\t" + check)
     return(res, len(tests))
 

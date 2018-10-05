@@ -180,7 +180,7 @@ class App(tk.Tk):
         def f(val):
             variable = calc.variable
             function = reduced.replace(variable, str(val)).split("=")[0]
-            return calc.calcul(function, False)
+            return calc.calcul(function, True)
         
         x = [elem for elem in range(-9, 10)]
         y = [f(elem)[-1] for elem in x]

@@ -2,6 +2,7 @@
 
 import subprocess
 import sys
+import progressbar
 
 ###########################################################
 def bastard_tests(usage):
@@ -43,8 +44,9 @@ def bastard_tests(usage):
              ]
 
     res = 0
-    for test in tests:
-        result = subprocess.run(["python", "computor.py", test], shell=True, stdout=subprocess.PIPE)
+    bar = progressbar.ProgressBar()
+    for test in bar(tests):
+        result = subprocess.run(["python", "computor.py", test], stdout=subprocess.PIPE)
         out = result.stdout.decode('utf-8').strip()
         if "Error: " in out or out == usage:
             check = "\033[1;32;40m OK"
@@ -113,7 +115,8 @@ def tests_deg_0():
              ]
 
     res = 0
-    for test in tests:
+    bar = progressbar.ProgressBar()
+    for test in bar(tests):
         test = test.replace(",", ".")
         result = subprocess.run(["python", "computor.py", test], stdout=subprocess.PIPE)
         out = result.stdout.decode('utf-8').strip()
@@ -160,7 +163,8 @@ def tests_deg_1():
          ]
 
     res = 0
-    for test in tests:
+    bar = progressbar.ProgressBar()
+    for test in bar(tests):
         result = subprocess.run(["python", "computor.py", test[0]], stdout=subprocess.PIPE)
         out = result.stdout.decode('utf-8')
         if not("Error :" in out):
@@ -192,7 +196,8 @@ def tests_deg_2():
          ]
 
     res = 0
-    for test in tests:
+    bar = progressbar.ProgressBar()
+    for test in bar(tests):
         result = subprocess.run(["python", "computor.py", test[0]], stdout=subprocess.PIPE)
         out = result.stdout.decode('utf-8')
         if not("Error :" in out):
@@ -213,7 +218,7 @@ def tests_deg_2():
 #main######################################################
 if __name__ == "__main__":
     print("\n\033[1;35;40m*** ComputorV1 Tester ***")
-    result = subprocess.run(["python", "computor.py", "--usage"], shell=True, stdout=subprocess.PIPE)
+    result = subprocess.run(["python", "computor.py", "--usage"], stdout=subprocess.PIPE)
     usage = result.stdout.decode('utf-8').strip()
     res = 0
     total = 0

@@ -167,10 +167,9 @@ def ft_prod_deg_0(members_list):
     return(str(res))
 
 def ft_split_prod_01_var(elem, variable, i):
-    j = 0
     splited = []
     var = ""
-    for char in elem:
+    for j, char in enumerate(elem):
         if char in "*/" or j == 0:
             k = j + 1
             var_start = -1
@@ -188,15 +187,13 @@ def ft_split_prod_01_var(elem, variable, i):
                     var = elem[var_start]                   
                 else:
                     var = elem[var_start:var_end]
-        j += 1
     return (ft_prod_deg_0(splited) + var)
     
 def ft_split_prod_more_vars(elem, variable, i):
-    j = 0
     splited = []
     var = ""
     var_power = None
-    for char in elem:
+    for j, char in enumerate(elem):
         if char in "*/" or j == 0:
             k = j + 1
             var_start = -1
@@ -228,7 +225,6 @@ def ft_split_prod_more_vars(elem, variable, i):
                         var_power -= int(elem[var_end - 1])
                     else:
                         var_power -= 1
-        j += 1
     if var_power != 0 and var_power != 1:
         var = var + "^" + str(var_power)
     elif var_power == 0:
@@ -365,6 +361,52 @@ def deal_with_par(members_list, variable):
             member = members_list[n]
     return(members_list)
 
+def ft_crossover(l_member_list, r_member_list, variable):
+    div_in_l = 0
+    div_in_r = 0
+    for elem in l_member_list:
+        if "/" + variable in elem:
+            div_in_l = 1
+    if div_in_l == 1:
+        for i, elem in enumerate(l_member_list):
+            if "/" + variable in elem:
+                for j, char in enumerate(elem):
+                    if char == "/" and elem[j + 1] == variable:
+                        break
+                l_member_list[i] = elem[:j]
+            else:
+                if elem[0] == "-":
+                    r_member_list.append("+" + elem[1:])
+                elif elem[0] == "+":
+                    r_member_list.append("-" + elem[1:])
+                elif elem[0] != "+" and elem[0] != "-":
+                    r_member_list.append("-" + elem)
+                l_member_list.pop(i)
+        for k, elem in enumerate(r_member_list):
+            r_member_list[k] += variable
+            
+    for elem in r_member_list:
+        if "/" + variable in elem:
+            div_in_r = 1
+    if div_in_r == 1:
+        for i, elem in enumerate(r_member_list):
+            if "/" + variable in elem:
+                for j, char in enumerate(elem):
+                    if char == "/" and elem[j + 1] == variable:
+                        break
+                r_member_list[i] = elem[:j]
+            else:
+                if elem[0] == "-":
+                    l_member_list.append("+" + elem[1:])
+                elif elem[0] == "+":
+                    l_member_list.append("-" + elem[1:])
+                elif elem[0] != "+" and elem[0] != "-":
+                    l_member_list.append("-" + elem)
+                r_member_list.pop(i)
+        for k, elem in enumerate(l_member_list):
+            l_member_list[k] += variable
+    return l_member_list, r_member_list
+
 def ft_calculate(equation, variable, is_par):
     reduced = "None"
     equation = equation.replace(" ", "")
@@ -375,6 +417,7 @@ def ft_calculate(equation, variable, is_par):
         r_member = members_list[1]
         l_member_list = ft_split_sum(l_member, variable)                        #Split/Prod left members
         r_member_list = ft_split_sum(r_member, variable)                        #Split/Prod right members
+        l_member_list, r_member_list = ft_crossover(l_member_list, r_member_list, variable)
         if l_member_list or r_member_list:
             if len(l_member_list) > 0:
                 i = 0
@@ -383,6 +426,8 @@ def ft_calculate(equation, variable, is_par):
                         r_member_list[i] = "-" + elem[1:]     
                     elif elem[0] == "-":
                         r_member_list[i] = "+" + elem[1:]
+                    elif elem[0] != "+" and elem[0] != "-":
+                        r_member_list[i] = "-" + elem 
                     i += 1
             l_member_list += r_member_list                                      #Merge members
             l_member_list = ft_dispatch(l_member_list, variable)                #Sum by degree

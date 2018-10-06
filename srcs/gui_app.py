@@ -23,6 +23,8 @@ class App(tk.Tk):
         self.result = tk.StringVar()
         self.discr = tk.StringVar()
 
+        self.graph = None
+
         self.main_frame = tk.Frame(self, padx=20, pady=20)
         self.main_frame.grid(row=0, column=0)
         self.main_frame.grid_rowconfigure(0, weight=1)
@@ -189,7 +191,6 @@ class App(tk.Tk):
             else:
                 var_value = str(val)
             function = reduced_left.replace(variable, var_value)
-            print(function)
             return calc.calcul(function, True)
         
         x = [elem for elem in range(-9, 10)]
@@ -199,9 +200,9 @@ class App(tk.Tk):
         a.axhline(0, color='black')
         a.axvline(0, color='black')
         
-        canvas = FigureCanvasTkAgg(fig, self.main_frame)
-        canvas.draw()
-        canvas.get_tk_widget().grid(column=1,row=1)
+        self.graph = FigureCanvasTkAgg(fig, self.main_frame)
+        self.graph.draw()
+        self.graph.get_tk_widget().grid(column=1,row=1)
         
     def process(self, event):
         calc = Calc()
@@ -256,6 +257,8 @@ class App(tk.Tk):
             else:
                 if self.infos_frame:
                     self.infos_frame.destroy()
+                if self.graph != None:
+                    self.graph.get_tk_widget().destroy()
                          
                 self.infos_frame = tk.Frame(self.main_frame)
                 self.infos_frame.grid(row=2, column=0, stick="sew")

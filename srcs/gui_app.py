@@ -104,9 +104,10 @@ class App(tk.Tk):
         but_0 = tk.Button(numbers_grid, text="0", font=20, width=4, padx=10, pady=10)
         but_0.bind("<Button-1>", self.insert_from_but)
         but_0.grid(row=3, column=1)
-        but_power = tk.Button(numbers_grid, text="^", font=20, width=4, padx=10, pady=10)
-        but_power.bind("<Button-1>", self.insert_from_but)
-        but_power.grid(row=3, column=2)
+        but_egal = tk.Button(numbers_grid, text="=", font=20, width=4, padx=10, pady=10)
+        but_egal.bind("<Button-1>", self.insert_from_but)
+        but_egal.grid(row=3, column=2)
+
 
         operators_grid = tk.Frame(buttons_grid, padx=10, pady=10)
         operators_grid.grid(row=1, column=2)
@@ -139,9 +140,9 @@ class App(tk.Tk):
         variables_grid.grid_rowconfigure(3, weight=1)
         variables_grid.grid_columnconfigure(0, weight=1)
 
-        but_egal = tk.Button(variables_grid, text="=", font=20, width=4, padx=10, pady=10)
-        but_egal.bind("<Button-1>", self.insert_from_but)
-        but_egal.grid(row=0, column=0)
+        but_power = tk.Button(variables_grid, text="^", font=20, width=4, padx=10, pady=10)
+        but_power.bind("<Button-1>", self.insert_from_but)
+        but_power.grid(row=0, column=0)
         but_x = tk.Button(variables_grid, text="x", font=20, width=4, padx=10, pady=10)
         but_x.bind("<Button-1>", self.insert_from_but)
         but_x.grid(row=1, column=0) 

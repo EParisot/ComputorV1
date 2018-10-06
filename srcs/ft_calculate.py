@@ -364,47 +364,73 @@ def deal_with_par(members_list, variable):
 def ft_crossover(l_member_list, r_member_list, variable):
     div_in_l = 0
     div_in_r = 0
+    power = 0
     for elem in l_member_list:
         if "/" + variable in elem:
             div_in_l = 1
     if div_in_l == 1:
-        for i, elem in enumerate(l_member_list):
-            if "/" + variable in elem:
-                for j, char in enumerate(elem):
-                    if char == "/" and elem[j + 1] == variable:
+        i = 0
+        while i < len(l_member_list):
+            if "/" + variable in l_member_list[i]:
+                for j, char in enumerate(l_member_list[i]):
+                    if char == "/" and l_member_list[i][j + 1] == variable:
                         break
-                l_member_list[i] = elem[:j]
+                l_member_list[i] = l_member_list[i][:j]
             else:
-                if elem[0] == "-":
-                    r_member_list.append("+" + elem[1:])
-                elif elem[0] == "+":
-                    r_member_list.append("-" + elem[1:])
-                elif elem[0] != "+" and elem[0] != "-":
-                    r_member_list.append("-" + elem)
+                if l_member_list[i][0] == "-":
+                    r_member_list.append("+" + l_member_list[i][1:])
+                elif l_member_list[i][0] == "+":
+                    r_member_list.append("-" + l_member_list[i][1:])
+                elif l_member_list[i][0] != "+" and l_member_list[i][0] != "-":
+                    r_member_list.append("-" + l_member_list[i])
                 l_member_list.pop(i)
+                i -= 1
+            i += 1
         for k, elem in enumerate(r_member_list):
-            r_member_list[k] += variable
-            
+            if not (variable in elem):
+                r_member_list[k] += variable
+            else:
+                if not ("^" in elem):
+                    r_member_list[k] += "^2"
+                else:
+                    for n, char in enumerate(elem):
+                        if char == "^" and elem[n-1] == variable:
+                            start = n + 1
+                            power = int(elem[n+1:]) + 1
+                    r_member_list[k][:start] += "^" + str(power)
     for elem in r_member_list:
         if "/" + variable in elem:
             div_in_r = 1
     if div_in_r == 1:
-        for i, elem in enumerate(r_member_list):
-            if "/" + variable in elem:
-                for j, char in enumerate(elem):
-                    if char == "/" and elem[j + 1] == variable:
+        i = 0
+        while i < len(r_member_list):
+            if "/" + variable in r_member_list[i]:
+                for j, char in enumerate(r_member_list[i]):
+                    if char == "/" and r_member_list[i][j + 1] == variable:
                         break
-                r_member_list[i] = elem[:j]
+                r_member_list[i] = r_member_list[i][:j]
             else:
-                if elem[0] == "-":
-                    l_member_list.append("+" + elem[1:])
-                elif elem[0] == "+":
-                    l_member_list.append("-" + elem[1:])
-                elif elem[0] != "+" and elem[0] != "-":
-                    l_member_list.append("-" + elem)
+                if r_member_list[i][0] == "-":
+                    l_member_list.append("+" + r_member_list[i][1:])
+                elif r_member_list[i][0] == "+":
+                    l_member_list.append("-" + r_member_list[i][1:])
+                elif r_member_list[i][0] != "+" and r_member_list[i][0] != "-":
+                    l_member_list.append("-" + r_member_list[i])
                 r_member_list.pop(i)
+                i -= 1
+            i += 1
         for k, elem in enumerate(l_member_list):
-            l_member_list[k] += variable
+            if not (variable in elem):
+                l_member_list[k] += variable
+            else:
+                if not ("^" in elem):
+                    l_member_list[k] += "^2"
+                else:
+                    for n, char in enumerate(elem):
+                        if char == "^" and elem[n-1] == variable:
+                            start = n + 1
+                            power = int(elem[n+1:]) + 1
+                    l_member_list[k][:start] += "^" + str(power)
     return l_member_list, r_member_list
 
 def ft_calculate(equation, variable, is_par):
@@ -427,7 +453,7 @@ def ft_calculate(equation, variable, is_par):
                     elif elem[0] == "-":
                         r_member_list[i] = "+" + elem[1:]
                     elif elem[0] != "+" and elem[0] != "-":
-                        r_member_list[i] = "-" + elem 
+                        r_member_list[i] = "-" + elem
                     i += 1
             l_member_list += r_member_list                                      #Merge members
             l_member_list = ft_dispatch(l_member_list, variable)                #Sum by degree

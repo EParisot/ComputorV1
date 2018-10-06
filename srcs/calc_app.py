@@ -28,7 +28,7 @@ class Calc(object):
     def calcul(self, equation, gui):
         reduced, reduced_list = ft_calculate(equation, self.variable, False)      #Process reduction / Calc
         if len(reduced_list) == 0:
-            if gui == False: 
+            if gui == False:
                 print("Error: Invalid input")
                 exit(0)
             else:

@@ -365,6 +365,7 @@ def ft_crossover(l_member_list, r_member_list, variable):
     div_in_l = 0
     div_in_r = 0
     power = 0
+    var_pow = 0
     for elem in l_member_list:
         if "/" + variable in elem:
             div_in_l = 1
@@ -375,7 +376,12 @@ def ft_crossover(l_member_list, r_member_list, variable):
                 for j, char in enumerate(l_member_list[i]):
                     if char == "/" and l_member_list[i][j + 1] == variable:
                         break
+                var = l_member_list[i][j+1:]
                 l_member_list[i] = l_member_list[i][:j]
+                if "^" in var:
+                    var_pow = int(var[2:])
+                else:
+                    var_pow = 1
             else:
                 if l_member_list[i][0] == "-":
                     r_member_list.append("+" + l_member_list[i][1:])
@@ -388,16 +394,17 @@ def ft_crossover(l_member_list, r_member_list, variable):
             i += 1
         for k, elem in enumerate(r_member_list):
             if not (variable in elem):
-                r_member_list[k] += variable
+                r_member_list[k] += var
             else:
                 if not ("^" in elem):
-                    r_member_list[k] += "^2"
+                    r_member_list[k] += "^" + str(1 + var_pow)
                 else:
                     for n, char in enumerate(elem):
                         if char == "^" and elem[n-1] == variable:
                             start = n + 1
-                            power = int(elem[n+1:]) + 1
-                    r_member_list[k][:start] += "^" + str(power)
+                            power = int(elem[n+1:])
+                    r_member_list[k][:start] += "^" + str(power + var_pow)
+                    
     for elem in r_member_list:
         if "/" + variable in elem:
             div_in_r = 1
@@ -408,7 +415,12 @@ def ft_crossover(l_member_list, r_member_list, variable):
                 for j, char in enumerate(r_member_list[i]):
                     if char == "/" and r_member_list[i][j + 1] == variable:
                         break
+                var = r_member_list[i][j+1:]
                 r_member_list[i] = r_member_list[i][:j]
+                if "^" in var:
+                    var_pow = int(var[2:])
+                else:
+                    var_pow = 1
             else:
                 if r_member_list[i][0] == "-":
                     l_member_list.append("+" + r_member_list[i][1:])
@@ -421,16 +433,16 @@ def ft_crossover(l_member_list, r_member_list, variable):
             i += 1
         for k, elem in enumerate(l_member_list):
             if not (variable in elem):
-                l_member_list[k] += variable
+                l_member_list[k] += var
             else:
                 if not ("^" in elem):
-                    l_member_list[k] += "^2"
+                    l_member_list[k] += "^" + str(1 + var_pow)
                 else:
                     for n, char in enumerate(elem):
                         if char == "^" and elem[n-1] == variable:
                             start = n + 1
-                            power = int(elem[n+1:]) + 1
-                    l_member_list[k][:start] += "^" + str(power)
+                            power = int(elem[n+1:])
+                    l_member_list[k][:start] += "^" + str(power + var_pow)
     return l_member_list, r_member_list
 
 def ft_calculate(equation, variable, is_par):

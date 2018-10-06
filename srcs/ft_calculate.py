@@ -155,9 +155,15 @@ def ft_prod_deg_0(members_list):
             splited = ft_split_power(members_list)                              #Power first
     for idx, fact in enumerate(members_list):
         if fact[0] == "*" or idx == 0:
-            res *= float(fact[1 if idx != 0 else 0:])
+            if len(fact) > 1:
+                res *= float(fact[1 if idx != 0 else 0:])
+            else:
+                res = str(res)
         elif fact[0] == "/":
-            res /= float(fact[1:])
+            if len(fact) > 1:
+                res /= float(fact[1:])
+            else:
+                res = str(res) + "/"
     return(str(res))
 
 def ft_split_prod_01_var(elem, variable, i):

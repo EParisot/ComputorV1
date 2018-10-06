@@ -179,12 +179,25 @@ class App(tk.Tk):
 
         def f(val):
             variable = calc.variable
-            function = reduced.replace(variable, str(val)).split("=")[0]
+            idx = 0
+            reduced_left = reduced.split("=")[0]
+            for i, char in enumerate(reduced_left):
+                if char == variable:
+                    idx = i
+            if idx != 0 and reduced_left[i:i+1].isdigit():
+                var_value = "*" + str(val)
+            else:
+                var_value = str(val)
+            function = reduced_left.replace(variable, var_value)
+            print(function)
             return calc.calcul(function, True)
         
         x = [elem for elem in range(-9, 10)]
-        y = [f(elem)[-1] for elem in x]
+        y = [float(f(elem)[-1]) for elem in x]
         a.plot(x, y)
+
+        a.axhline(0, color='black')
+        a.axvline(0, color='black')
         
         canvas = FigureCanvasTkAgg(fig, self.main_frame)
         canvas.draw()

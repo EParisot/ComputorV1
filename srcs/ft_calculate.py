@@ -95,8 +95,9 @@ def ft_dispatch(members_list, variable):
 def ft_get_power(elem, variable):
     for n, char in enumerate(elem):
         if char == "^" and elem[n-1] == variable:
-            power = int(elem[n+1:])
-    return (power)
+            power = float(elem[n+1:])
+            start = n + 1
+    return (power, start)
 
 def ft_abs(number):
     if number > 0:
@@ -372,7 +373,12 @@ def ft_distrib_div(l_member_list, r_member_list, variable):
     power = 0
     for i, elem in enumerate(l_member_list):
         if "/" + variable in elem:
-            l_member_list[i] = elem.replace("/" + variable, variable + "^-1")
+            new_pow = -1
+            if variable + "^" in elem:
+                new_pow, start = ft_get_power(elem, variable)
+                new_pow -= 1
+                l_member_list[i] = elem[:start - 1]
+            l_member_list[i] = l_member_list[i].replace("/" + variable, variable + "^" + str(new_pow))
             idx = i
         elif variable + "^-" in elem:
             idx = i
@@ -396,10 +402,7 @@ def ft_distrib_div(l_member_list, r_member_list, variable):
                 l_member_list.pop(i)
                 i -= 1
             i += 1
-
         power = float(power * -1)
-    
-        
         for k, elem in enumerate(r_member_list):
             if not (variable in elem):
                 r_member_list[k] += variable
@@ -407,12 +410,8 @@ def ft_distrib_div(l_member_list, r_member_list, variable):
                 if not ("^" in elem):
                     r_member_list[k] += "^" + str(1 + power)
                 else:
-                    for n, char in enumerate(elem):
-                        if char == "^" and elem[n-1] == variable:
-                            start = n + 1
-                            var_pow = int(elem[n+1:])
+                    var_pow, start = ft_get_power(elem)
                     r_member_list[k][:start] += "^" + str(var_pow + power)
-                
     return l_member_list, r_member_list
 
 def ft_calculate(equation, variable, is_par):

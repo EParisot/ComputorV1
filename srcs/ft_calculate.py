@@ -374,6 +374,8 @@ def ft_distrib_div(l_member_list, r_member_list, variable):
         if "/" + variable in elem:
             l_member_list[i] = elem.replace("/" + variable, variable + "^-1")
             idx = i
+        elif variable + "^-" in elem:
+            idx = i
         i = 0
 
     if idx > -1:

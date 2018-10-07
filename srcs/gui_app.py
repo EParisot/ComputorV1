@@ -176,26 +176,31 @@ class App(tk.Tk):
     def insert_from_but(self, event):
         self.entry.insert("end", event.widget['text'])
 
+    def frange(self, start, stop, step):
+        i = start
+        while i < stop:
+            yield round(i, 2)
+            i += step
+
     def show_graph(self, reduced, calc):
         fig = Figure(figsize=(5, 5), dpi=100)
         a = fig.add_subplot(111)
 
         def f(val):
             variable = calc.variable
-            idx = 0
             reduced_left = reduced.split("=")[0]
             for i, char in enumerate(reduced_left):
                 if char == variable:
-                    idx = i
-            if idx != 0 and reduced_left[i:i+1].isdigit():
-                var_value = "*" + str(val)
-            else:
-                var_value = str(val)
-            function = reduced_left.replace(variable, var_value)
-            return calc.calcul(function, True)
+                    if i != 0 and reduced_left[i-1:i].isdigit():
+                        var_value = "*" + str(val)
+                    else:
+                        var_value = str(val)
+                    reduced_left = reduced_left.replace(variable, var_value)
+            return calc.calcul(reduced_left, True)
         
-        x = [elem for elem in range(-9, 10)]
+        x = [elem for elem in self.frange(-9, 10, 0.1)]
         y = [float(f(elem)[-1]) for elem in x]
+        
         a.plot(x, y)
 
         a.axhline(0, color='black')

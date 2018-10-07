@@ -261,11 +261,12 @@ def ft_split_sum(member, variable):
             while (j < len(member) and (not(member[j] in "+-") \
                     or member[j - 1] in "/*^")):
                 j += 1                                                          #Between each "+" or "-" (not preceded by "/" or "*"):
-            signed = member[i:j]                                                #Slice a single member
-            if not(member[i] in "+-") and i == 0:
-                signed = "+" + signed                                           #Append "+" if needed
-            splited.append(signed)
-            i = j - 1
+            if member[i:j] != "0":
+                signed = member[i:j]                                                #Slice a single member
+                if not(member[i] in "+-") and i == 0:
+                    signed = "+" + signed                                           #Append "+" if needed
+                splited.append(signed)
+                i = j - 1
         i += 1
     i = 0
     for elem in splited:
@@ -372,26 +373,42 @@ def ft_distrib_div(l_member_list, r_member_list, variable):
     idx = -1
     power = 0
     for i, elem in enumerate(l_member_list):
+        if "^0.0" in l_member_list[i]:
+            var_pow, start = ft_get_power(elem, variable)
+            l_member_list[i] = l_member_list[i][:start-2]
         if "/" + variable in elem:
-            new_pow = -1
+            new_pow = 1
             if variable + "^" in elem:
                 new_pow, start = ft_get_power(elem, variable)
                 new_pow -= 1
                 l_member_list[i] = elem[:start - 1]
-            l_member_list[i] = l_member_list[i].replace("/" + variable, variable + "^" + str(new_pow))
+                l_member_list[i] = l_member_list[i].replace("/" + variable, variable + "^" + str(new_pow))
+            else:
+                l_member_list[i] = l_member_list[i].replace("/" + variable, "")
+                power = new_pow
             idx = i
         elif variable + "^-" in elem:
             idx = i
         i = 0
-
-    if idx > -1:
+    if idx != -1:
         while i < len(l_member_list):
-            if i == idx:
+            if i == idx or "^-" in l_member_list[i]:
                 for j, char in enumerate(l_member_list[i]):
-                    if char == "^" and l_member_list[i][j + 1] == "-" and l_member_list[i][j - 1] == variable:
-                        power = int(l_member_list[i][j + 1:])
-                        l_member_list[i] = l_member_list[i][:j-1]
-                        break
+                    if char == "^" and l_member_list[i][j - 1] == variable:
+                        if i == idx:
+                            power = float(l_member_list[i][j + 1:])
+                            if power == -1.0:
+                                power = 1.0
+                            else:
+                                power += 1
+                            l_member_list[i] = l_member_list[i][:j-1]
+                        else:
+                            other_power = float(l_member_list[i][j + 1:]) - power
+                            if other_power == -1.0:
+                                other_power = 1.0
+                            else:
+                                other_power += 1
+                            l_member_list[i] = l_member_list[i][:j-1] + variable + "^" + str(other_power)
             else:
                 if l_member_list[i][0] == "-":
                     r_member_list.append("+" + l_member_list[i][1:])
@@ -400,18 +417,20 @@ def ft_distrib_div(l_member_list, r_member_list, variable):
                 elif l_member_list[i][0] != "+" and l_member_list[i][0] != "-":
                     r_member_list.append("-" + l_member_list[i])
                 l_member_list.pop(i)
+                if idx > i:
+                    idx -= 1
                 i -= 1
             i += 1
-        power = float(power * -1)
         for k, elem in enumerate(r_member_list):
             if not (variable in elem):
-                r_member_list[k] += variable
+                r_member_list[k] += variable + ("^" + str(power) if power != 0 and power != 1 else "")
             else:
                 if not ("^" in elem):
                     r_member_list[k] += "^" + str(1 + power)
                 else:
-                    var_pow, start = ft_get_power(elem)
-                    r_member_list[k][:start] += "^" + str(var_pow + power)
+                    var_pow, start = ft_get_power(elem, variable)
+                    r_member_list[k] = r_member_list[k][:start] + str(var_pow + power)
+    #print(l_member_list, r_member_list)
     return l_member_list, r_member_list
 
 def ft_calculate(equation, variable, is_par):

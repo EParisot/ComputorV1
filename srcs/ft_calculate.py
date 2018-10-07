@@ -367,27 +367,23 @@ def deal_with_par(members_list, variable):
             member = members_list[n]
     return(members_list)
 
-def ft_crossover(l_member_list, r_member_list, variable):
-    div_in_l = 0
-    div_in_r = 0
+def ft_distrib_div(l_member_list, r_member_list, variable):
+    idx = -1
     power = 0
-    var_pow = 0
-    for elem in l_member_list:
+    for i, elem in enumerate(l_member_list):
         if "/" + variable in elem:
-            div_in_l = 1
-    if div_in_l == 1:
+            l_member_list[i] = elem.replace("/" + variable, variable + "^-1")
+            idx = i
         i = 0
+
+    if idx > -1:
         while i < len(l_member_list):
-            if "/" + variable in l_member_list[i]:
+            if i == idx:
                 for j, char in enumerate(l_member_list[i]):
-                    if char == "/" and l_member_list[i][j + 1] == variable:
+                    if char == "^" and l_member_list[i][j + 1] == "-" and l_member_list[i][j - 1] == variable:
+                        power = int(l_member_list[i][j + 1:])
+                        l_member_list[i] = l_member_list[i][:j-1]
                         break
-                var = l_member_list[i][j+1:]
-                l_member_list[i] = l_member_list[i][:j]
-                if "^" in var:
-                    var_pow = int(var[2:])
-                else:
-                    var_pow = 1
             else:
                 if l_member_list[i][0] == "-":
                     r_member_list.append("+" + l_member_list[i][1:])
@@ -398,18 +394,23 @@ def ft_crossover(l_member_list, r_member_list, variable):
                 l_member_list.pop(i)
                 i -= 1
             i += 1
+
+        power = float(power * -1)
+    
+        
         for k, elem in enumerate(r_member_list):
             if not (variable in elem):
-                r_member_list[k] += var
+                r_member_list[k] += variable
             else:
                 if not ("^" in elem):
-                    r_member_list[k] += "^" + str(1 + var_pow)
+                    r_member_list[k] += "^" + str(1 + power)
                 else:
                     for n, char in enumerate(elem):
                         if char == "^" and elem[n-1] == variable:
                             start = n + 1
-                            power = int(elem[n+1:])
-                    r_member_list[k][:start] += "^" + str(power + var_pow)
+                            var_pow = int(elem[n+1:])
+                    r_member_list[k][:start] += "^" + str(var_pow + power)
+                
     return l_member_list, r_member_list
 
 def ft_calculate(equation, variable, is_par):
@@ -422,8 +423,8 @@ def ft_calculate(equation, variable, is_par):
         r_member = members_list[1]
         l_member_list = ft_split_sum(l_member, variable)                        #Split/Prod left members
         r_member_list = ft_split_sum(r_member, variable)                        #Split/Prod right members
-        l_member_list, r_member_list = ft_crossover(l_member_list, r_member_list, variable)
-        r_member_list, l_member_list = ft_crossover(r_member_list, l_member_list, variable)
+        l_member_list, r_member_list = ft_distrib_div(l_member_list, r_member_list, variable)
+        r_member_list, l_member_list = ft_distrib_div(r_member_list, l_member_list, variable)
         if l_member_list or r_member_list:
             if len(l_member_list) > 0:
                 i = 0

@@ -372,10 +372,17 @@ def deal_with_par(members_list, variable):
 def ft_distrib_div(l_member_list, r_member_list, variable):
     idx = -1
     power = 0
-    for i, elem in enumerate(l_member_list):
-        if "^0.0" in l_member_list[i]:
-            var_pow, start = ft_get_power(elem, variable)
-            l_member_list[i] = l_member_list[i][:start-2]
+    
+    def clean_zeros(member_list):
+        for i, elem in enumerate(member_list):
+            if variable + "^0.0" in elem:
+                var_pow, start = ft_get_power(elem, variable)
+                member_list[i] = elem[:start-2]
+        return member_list
+    clean_zeros(l_member_list)
+    clean_zeros(r_member_list)
+    
+    for i, elem in enumerate(l_member_list):                                    #Make "/x" or "x^-1" dissapear
         if "/" + variable in elem:
             new_pow = 1
             if variable + "^" in elem:
@@ -390,7 +397,7 @@ def ft_distrib_div(l_member_list, r_member_list, variable):
         elif variable + "^-" in elem:
             idx = i
         i = 0
-    if idx != -1:
+    if idx != -1:                                                               #Calc new powers by distribution
         while i < len(l_member_list):
             if i == idx or "^-" in l_member_list[i]:
                 for j, char in enumerate(l_member_list[i]):
@@ -421,7 +428,7 @@ def ft_distrib_div(l_member_list, r_member_list, variable):
                     idx -= 1
                 i -= 1
             i += 1
-        for k, elem in enumerate(r_member_list):
+        for k, elem in enumerate(r_member_list):                                #Apply new powers
             if not (variable in elem):
                 r_member_list[k] += variable + ("^" + str(power) if power != 0 and power != 1 else "")
             else:
@@ -430,8 +437,7 @@ def ft_distrib_div(l_member_list, r_member_list, variable):
                 else:
                     var_pow, start = ft_get_power(elem, variable)
                     r_member_list[k] = r_member_list[k][:start] + str(var_pow + power)
-    #print(l_member_list, r_member_list)
-    return l_member_list, r_member_list
+    return clean_zeros(l_member_list), clean_zeros(r_member_list)
 
 def ft_calculate(equation, variable, is_par):
     reduced = "None"
@@ -443,8 +449,14 @@ def ft_calculate(equation, variable, is_par):
         r_member = members_list[1]
         l_member_list = ft_split_sum(l_member, variable)                        #Split/Prod left members
         r_member_list = ft_split_sum(r_member, variable)                        #Split/Prod right members
-        l_member_list, r_member_list = ft_distrib_div(l_member_list, r_member_list, variable)
-        r_member_list, l_member_list = ft_distrib_div(r_member_list, l_member_list, variable)
+        run = True
+        while run:                                                              #Dispatch divisions
+            run = False
+            l_member_list, r_member_list = ft_distrib_div(l_member_list, r_member_list, variable)
+            r_member_list, l_member_list = ft_distrib_div(r_member_list, l_member_list, variable)
+            for elem in l_member_list + r_member_list:
+                if variable + "^-" in elem:
+                    run = True
         if l_member_list or r_member_list:
             if len(l_member_list) > 0:
                 i = 0

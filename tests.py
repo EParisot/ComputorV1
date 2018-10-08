@@ -4,6 +4,11 @@ import subprocess
 import sys
 import progressbar
 
+if sys.platform == "darwin" or sys.platform == "linux":
+    new_line = "\n"
+else:
+    new_line = "\r\n"
+
 ###########################################################
 def bastard_tests(usage):
     print("\n\t\033[1;35;40m  -Testing like a Bastard:\n")
@@ -37,7 +42,7 @@ def bastard_tests(usage):
              "*42",
              "/42",
              "x^42",
-             
+
              "4x^0/8=4",
              "3+(4*(3*4)))",
              "(3+4)(3*4)",
@@ -66,7 +71,7 @@ def tests_deg_0():
              "+ 42",
              "4.2",
              "4,2",
-             
+
              "+42",
              "-42",
              "42",
@@ -80,7 +85,7 @@ def tests_deg_0():
              "40--2",
              "40++2",
              "4.2+37.8",
-             
+
              "2*21",
              "2*-21",
              "-2*21",
@@ -156,14 +161,14 @@ def tests_deg_1():
              ["4+2=5/x", "6.0x-5.0=0", "x= 0.8333333333333334"],
              ["4/x^-1-3x+2=0", "x+2.0=0", "x= -2.0"],
              ["0=4/x^-1-3x+2", "-1.0x-2.0=0", "x= -2.0"],
-             
+
              ["3+(4*(3*4x))", "48.0x+3.0=0", "x= -0.0625"],
              ["((12x+4)*(3*4))", "144.0x+48.0=0", "x= -0.3333333333333333"],
              ["(3*4)*(12x+4)", "144.0x+48.0=0", "x= -0.3333333333333333"],
              ["(12x+4)*(3*4)", "144.0x+48.0=0", "x= -0.3333333333333333"],
              ["(3+4x^1)*(3*4)", "48.0x+36.0=0", "x= -0.75"],
              ["((3*4)*(12x+4))", "144.0x+48.0=0", "x= -0.3333333333333333"],
-             
+
              ["(3+(4+12x))*(3*(4 + 12))", "576.0x+336.0=0", "x= -0.5833333333333334"],
          ]
 
@@ -173,7 +178,7 @@ def tests_deg_1():
         result = subprocess.run(["python", "computor.py", test[0]], stdout=subprocess.PIPE)
         out = result.stdout.decode('utf-8')
         if not("Error :" in out):
-            res_tab = out.split("\r\n")
+            res_tab = out.split(new_line)
             reduced = res_tab[1].split(" : ")[1]
             result = res_tab[2].split(" : ")[1]
 
@@ -209,7 +214,7 @@ def tests_deg_2():
         result = subprocess.run(["python", "computor.py", test[0]], stdout=subprocess.PIPE)
         out = result.stdout.decode('utf-8')
         if not("Error :" in out):
-            res_tab = out.split("\r\n")
+            res_tab = out.split(new_line)
             reduced = res_tab[1].split(" : ")[1]
             result = res_tab[3].split(" : ")[1]
 

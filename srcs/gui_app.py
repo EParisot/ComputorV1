@@ -15,7 +15,7 @@ class App(tk.Tk):
         self.title("ComputorV1")
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
-        
+
         self.equation = tk.StringVar()
         self.equation.set(equation)
         self.reduced = tk.StringVar()
@@ -33,13 +33,13 @@ class App(tk.Tk):
         self.main_frame.grid_columnconfigure(0, weight=1)
 
         self.infos_frame = None
-        
+
         entry_frame = tk.Frame(self.main_frame)
         entry_frame.grid(row=0, column=0, stick="new")
         entry_frame.grid_rowconfigure(0, weight=1)
         entry_frame.grid_columnconfigure(0, weight=1)
         entry_frame.grid_columnconfigure(1, weight=1)
-        
+
         self.entry = tk.Entry(entry_frame, textvariable=self.equation, justify='right', font=16)
         self.entry.grid(row=0, column=0, sticky='ew')
         self.entry.focus_set()
@@ -111,7 +111,7 @@ class App(tk.Tk):
 
         operators_grid = tk.Frame(buttons_grid, padx=10, pady=10)
         operators_grid.grid(row=1, column=2)
-        
+
         operators_grid.grid_rowconfigure(0, weight=1)
         operators_grid.grid_rowconfigure(1, weight=1)
         operators_grid.grid_rowconfigure(2, weight=1)
@@ -133,7 +133,7 @@ class App(tk.Tk):
 
         variables_grid = tk.Frame(buttons_grid, padx=10, pady=10)
         variables_grid.grid(row=1, column=0)
-        
+
         variables_grid.grid_rowconfigure(0, weight=1)
         variables_grid.grid_rowconfigure(1, weight=1)
         variables_grid.grid_rowconfigure(2, weight=1)
@@ -155,7 +155,7 @@ class App(tk.Tk):
 
         utils_grid = tk.Frame(buttons_grid, padx=10, pady=10)
         utils_grid.grid(row=0, column=1, columnspan=2, sticky="e")
-        
+
         utils_grid.grid_columnconfigure(0, weight=1)
         utils_grid.grid_columnconfigure(1, weight=1)
         utils_grid.grid_rowconfigure(0, weight=1)
@@ -172,6 +172,8 @@ class App(tk.Tk):
         self.entry.delete(0, "end")
         if self.infos_frame:
             self.infos_frame.destroy()
+            if self.graph != None:
+                self.graph.get_tk_widget().destroy()
 
     def insert_from_but(self, event):
         self.entry.insert("end", event.widget['text'])
@@ -197,19 +199,31 @@ class App(tk.Tk):
                         var_value = str(val)
                     reduced_left = reduced_left.replace(variable, var_value)
             return calc.calcul(reduced_left, True)
-        
-        x = [elem for elem in self.frange(-9, 10, 0.1)]
+
+        res_tab = self.result.get().split(" ")
+
+        if len(res_tab) == 1:
+            min = -10
+            max = 10
+        elif len(res_tab) == 5:
+            min = round(float(res_tab[1]), 2) - 10
+            max = round(float(res_tab[4]), 2) + 10
+        elif len(res_tab) == 2:
+            min = round(float(res_tab[1]), 2) - 10
+            max = round(float(res_tab[1]), 2) + 10
+
+        x = [elem for elem in self.frange(min, max, 0.1)]
         y = [float(f(elem)[-1]) for elem in x]
-        
+
         a.plot(x, y)
 
         a.axhline(0, color='black')
         a.axvline(0, color='black')
-        
+
         self.graph = FigureCanvasTkAgg(fig, self.main_frame)
         self.graph.draw()
         self.graph.get_tk_widget().grid(column=1,row=1)
-        
+
     def process(self, event):
         calc = Calc()
         if calc.parse(self.equation.get(), True):
@@ -223,7 +237,7 @@ class App(tk.Tk):
 
                 if self.infos_frame:
                     self.infos_frame.destroy()
-                
+
                 self.infos_frame = tk.Frame(self.main_frame)
                 self.infos_frame.grid(row=2, column=0, stick="sew")
                 self.infos_frame.grid_columnconfigure(0, weight=1)
@@ -246,13 +260,13 @@ class App(tk.Tk):
 
                 if self.discr.get() != "":
                     discr_label = tk.Label(self.infos_frame, text="Discriminator : ", font=16)
-                    discr_label.grid(row=2, column=0, sticky='w')         
+                    discr_label.grid(row=2, column=0, sticky='w')
 
                     discr_val = tk.Label(self.infos_frame, textvariable=self.discr, font=18)
                     discr_val.grid(row=2, column=1)
 
                 result_label = tk.Label(self.infos_frame, text="Result : ", font=16)
-                result_label.grid(row=3, column=0, sticky='w')         
+                result_label.grid(row=3, column=0, sticky='w')
 
                 result_val = tk.Label(self.infos_frame, textvariable=self.result, font=18)
                 result_val.grid(row=3, column=1)
@@ -265,7 +279,7 @@ class App(tk.Tk):
                     self.infos_frame.destroy()
                 if self.graph != None:
                     self.graph.get_tk_widget().destroy()
-                         
+
                 self.infos_frame = tk.Frame(self.main_frame)
                 self.infos_frame.grid(row=2, column=0, stick="sew")
                 self.infos_frame.grid_columnconfigure(0, weight=1)
@@ -273,7 +287,7 @@ class App(tk.Tk):
                 self.infos_frame.grid_rowconfigure(0, weight=1)
 
                 result_label = tk.Label(self.infos_frame, text="Result : ", font=16)
-                result_label.grid(row=0, column=0, sticky='w')         
+                result_label.grid(row=0, column=0, sticky='w')
 
                 result_val = tk.Label(self.infos_frame, textvariable=self.result, font=18)
                 result_val.grid(row=0, column=1)
@@ -291,7 +305,7 @@ class App(tk.Tk):
             self.infos_frame.grid_rowconfigure(0, weight=1)
 
             result_label = tk.Label(self.infos_frame, text="Result : ", font=16)
-            result_label.grid(row=0, column=0, sticky='w')         
+            result_label.grid(row=0, column=0, sticky='w')
 
             result_val = tk.Label(self.infos_frame, textvariable=self.result, font=18)
             result_val.grid(row=0, column=1)

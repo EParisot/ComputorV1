@@ -201,7 +201,6 @@ class App(tk.Tk):
             return calc.calcul(reduced_left, True)
 
         res_tab = self.result.get().split(" ")
-
         if len(res_tab) == 1:
             min = -10
             max = 10
@@ -211,6 +210,9 @@ class App(tk.Tk):
         elif len(res_tab) == 2:
             min = round(float(res_tab[1]), 2) - 10
             max = round(float(res_tab[1]), 2) + 10
+        elif len(res_tab) == 14:
+            min = -10
+            max = +10
 
         x = [elem for elem in self.frange(min, max, 0.1)]
         y = [float(f(elem)[-1]) for elem in x]

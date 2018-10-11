@@ -81,10 +81,7 @@ class Calc(object):
                 return (False)
         else:
             if gui == False:
-                if re.search("[a-zA-Z][\^][0-9][.]", equation):
-                    print("Error: Fractional powers not supported (yet)")
-                else:
-                    print("Error: Invalid input")
+                print("Error: Invalid input")
                 exit(0)
             return (False)
 

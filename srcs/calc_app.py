@@ -10,12 +10,12 @@ class Calc(object):
     def __init__(self):
         self.sum_list = []
         self.variable = "None"
-    
+
     def degree(self, reduced):
         if self.variable != "None":
             if re.search("([a-zA-Z][\^][2-4])", reduced):
                 for idx, char in enumerate(reduced):
-                    if char == "^":   
+                    if char == "^":
                         degree_val = int(reduced[idx + 1])
             elif "^1" in reduced or (self.variable in reduced and not("^" in reduced)):
                 degree_val = 1
@@ -24,7 +24,7 @@ class Calc(object):
         else:
             return("None")
         return(str(degree_val))
-        
+
     def calcul(self, equation, gui):
         reduced, reduced_list = ft_calculate(equation, self.variable, False)        #Process reduction / Calc
         if len(reduced_list) == 0:
@@ -137,4 +137,4 @@ class Calc(object):
             else:
                 return (False)
         return (True)
-        
+

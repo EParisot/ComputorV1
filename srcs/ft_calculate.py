@@ -30,7 +30,7 @@ def ft_sum_deg(members_list, variable, deg):
                     res += float(elem[0:i] + "1")
                 elif re.match('^[0-9+-.]+$', elem[0:i]):
                     res += float(elem[0:i])
-            i += 1                                               
+            i += 1
     if res != 0:
         if res == 1:
             s_res = ""
@@ -109,7 +109,7 @@ def ft_sqrt(number):
     if number > 0:
         prec = 1
         i = 0
-        while (prec >= 0.0001):
+        while (prec >= 0.00001):
             while i * i <= number:
                 if ft_abs(i * i - number) < 0.001:
                     return(i)
@@ -193,7 +193,7 @@ def ft_split_prod_01_var(elem, variable, i):
             splited.append(elem[j:k if var_start == -1 else var_start])
             if i > 0 and var_start != -1:                                       #Var to reintegrate
                 if "^1" in var:
-                    var = elem[var_start]                   
+                    var = elem[var_start]
                 else:
                     var = elem[var_start:var_end]
     return (ft_prod_deg_0(splited) + var)
@@ -374,7 +374,7 @@ def deal_with_par(members_list, variable):
 def ft_distrib_div(l_member_list, r_member_list, variable):
     idx = -1
     power = 0
-    
+
     def clean_zeros(member_list):
         for i, elem in enumerate(member_list):
             if variable + "^0.0" in elem:
@@ -383,7 +383,7 @@ def ft_distrib_div(l_member_list, r_member_list, variable):
         return member_list
     clean_zeros(l_member_list)
     clean_zeros(r_member_list)
-    
+
     for i, elem in enumerate(l_member_list):                                    #Make "/x" or "x^-1" dissapear
         if "/" + variable in elem:
             new_pow = 1

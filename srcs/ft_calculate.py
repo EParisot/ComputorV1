@@ -128,7 +128,7 @@ def ft_power(l_member, r_member, prefix):
             i = r_member - 1
         elif r_member < 0:
             i = r_member + 1
-        while i:
+        while i and i % 1 == 0:
             if r_member > 0:
                 i -= 1
                 res *= float(l_member)

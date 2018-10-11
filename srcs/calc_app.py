@@ -73,7 +73,7 @@ class Calc(object):
            not re.search("([\)][\(])", equation) and \
            not re.search("([\)][0-9a-zA-Z])", equation) and \
            not re.search("([0-9a-zA-Z][\(])", equation) and \
-           not re.search("[\^][0-9][.]", equation):
+           not re.search("[a-zA-Z][\^][0-9][.]", equation):
             equation = equation.replace(",", ".")
             if self.check(equation, gui) == True:
                 return (equation)
@@ -81,7 +81,7 @@ class Calc(object):
                 return (False)
         else:
             if gui == False:
-                if re.search("[\^][0-9][.]", equation):
+                if re.search("[a-zA-Z][\^][0-9][.]", equation):
                     print("Error: Fractional powers not supported (yet)")
                 else:
                     print("Error: Invalid input")

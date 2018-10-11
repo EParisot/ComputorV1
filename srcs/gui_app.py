@@ -210,7 +210,7 @@ class App(tk.Tk):
         elif len(res_tab) == 2:
             min = round(float(res_tab[1]), 2) - 10
             max = round(float(res_tab[1]), 2) + 10
-        elif len(res_tab) == 14:
+        else:
             min = -10
             max = +10
 

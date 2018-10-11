@@ -109,7 +109,7 @@ def ft_sqrt(number):
     if number > 0:
         prec = 1
         i = 0
-        while (prec >= 0.00001):
+        while (prec >= 0.0001):
             while i * i <= number:
                 if ft_abs(i * i - number) < 0.001:
                     return(i)
@@ -487,4 +487,6 @@ def ft_calculate(equation, variable, is_par):
             reduced = "".join(map(str, l_member_list))
     if len(reduced) > 0 and reduced[0] == "+":                                  #remove first "+"
         reduced = reduced[1:]
+    if reduced == "0=0" and variable != "None":
+        reduced = variable + " = " + variable
     return(reduced, l_member_list)

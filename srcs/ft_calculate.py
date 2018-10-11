@@ -122,7 +122,9 @@ def ft_power(l_member, r_member, prefix):
     i = r_member
     res = l_member
     if r_member != 0:
-        if r_member > 0:
+        if r_member % 1 != 0:
+            res = l_member ** r_member
+        elif r_member > 0:
             i = r_member - 1
         elif r_member < 0:
             i = r_member + 1

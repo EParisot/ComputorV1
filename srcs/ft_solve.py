@@ -4,6 +4,12 @@ import re
 
 from srcs.ft_calculate import ft_sqrt, ft_power, ft_split_sum
 
+def solve_in_C(discr, tab, variable):
+    conj_res = ["", ""]
+    conj_res[0] = ""
+    conj_res[1] = ""
+    return (conj_res)
+
 def ft_discriminator(reduced, variable):
     tab = [0, 0, 0]
 
@@ -25,7 +31,7 @@ def ft_discriminator(reduced, variable):
             tab[2] = float(elem)
     b_2 = float(ft_power(tab[1], 2, ""))
     discr = b_2 - (4 * tab[0] * tab[2])
-    return(discr, tab)
+    return (discr, tab)
 
 def ft_find_roots(discr, tab, variable):
     roots = []
@@ -68,5 +74,6 @@ def ft_solve(reduced, variable, deg):
             else:
                 result = "None"
         else:
-            result = "None"
+            conj_res = solve_in_C(discr, tab, variable)
+            result = "None in R, in C: " + variable + "1= " + conj_res[0] + "and " + variable + "2= " + conj_res[1]
     return (discr, result)

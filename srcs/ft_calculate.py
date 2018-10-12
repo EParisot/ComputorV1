@@ -135,7 +135,7 @@ def ft_power(l_member, r_member, prefix):
             elif r_member < 0:
                 i += 1
                 res *= float(l_member)
-        if r_member < 0:
+        if r_member < 0 and i % 1 == 0:
             res = 1 / res
     else:
         res = 1

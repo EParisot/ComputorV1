@@ -6,8 +6,10 @@ from srcs.ft_calculate import ft_sqrt, ft_power, ft_split_sum
 
 def solve_in_C(discr, tab, variable):
     conj_res = ["", ""]
-    conj_res[0] = str(round((-1 * tab[1]) / (2 * tab[0]), 2))  + " + " + str(round(ft_sqrt(-1 * discr) / (2 * tab[0]), 2)) + "i"
-    conj_res[1] = str(round((-1 * tab[1]) / (2 * tab[0]), 2))  + " - " + str(round(ft_sqrt(-1 * discr) / (2 * tab[0]), 2)) + "i"
+    conj_res[0] = str(round((-1 * tab[1]) / (2 * tab[0]), 2)) + \
+                " + " + str(round(ft_sqrt(-1 * discr) / (2 * tab[0]), 2)) + "i"
+    conj_res[1] = str(round((-1 * tab[1]) / (2 * tab[0]), 2)) + \
+                " - " + str(round(ft_sqrt(-1 * discr) / (2 * tab[0]), 2)) + "i"
     return (conj_res)
 
 def ft_discriminator(reduced, variable):
@@ -72,10 +74,12 @@ def ft_solve(reduced, variable, deg):
             if len(roots) == 1:
                 result = variable + "= " + roots[0]
             elif len(roots) == 2:
-                result = variable + "1= " + roots[0] + " and " + variable + "2= " + roots[1]
+                result = variable + "1= " + roots[0] + " and " \
+                         + variable + "2= " + roots[1]
             else:
                 result = "None"
         else:
             conj_res = solve_in_C(discr, tab, variable)
-            result = "None in R, in C: " + variable + "1= " + conj_res[0] + " and " + variable + "2= " + conj_res[1]
+            result = "None in R, in C: " + variable + "1= " + conj_res[0] \
+                     + " and " + variable + "2= " + conj_res[1]
     return (discr, result)

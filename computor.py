@@ -6,16 +6,17 @@ from srcs.calc_app import Calc
 import sys
 
 def print_usage():
-    print("Usage: python computor [--gui] <2nd_degree_equation>\n" + \
-                        "\t--gui: launch GUI\n" + \
-                        "\t--usage: print usage\n")
+    print("Usage: python computor [--gui] ['2nd_degree_equation']\n" + \
+                        "\t no args: interactive mode"
+                        "\t--gui: GUI mode\n" + \
+                        "\t--usage, --help, --h: print usage\n")
 
 if __name__ == "__main__":
+    calc = Calc()
+    gui = False
     if len(sys.argv) > 1:
-        calc = Calc()
-        gui = False
         for arg in sys.argv[1:]:
-            if arg in ("--usage", "--help"):
+            if arg in ("--usage", "--help", "--h"):
                 print_usage()
                 exit(0)
             elif arg == "--gui":
@@ -34,8 +35,8 @@ if __name__ == "__main__":
             App("").mainloop()
             exit(0)
     else:
-        print_usage()
-
-
-
-
+        equation = input("> ")
+        equation = calc.parse(equation, gui)
+        if equation:
+            calc.calcul(equation, gui)
+            exit(0)

@@ -108,7 +108,6 @@ class App(tk.Tk):
         but_egal.bind("<Button-1>", self.insert_from_but)
         but_egal.grid(row=3, column=2)
 
-
         operators_grid = tk.Frame(buttons_grid, padx=10, pady=10)
         operators_grid.grid(row=1, column=2)
 

@@ -327,6 +327,7 @@ def deal_with_par(members_list, variable):
             if not ("(" in member[1:-1] or ")" in member[1:-1]):
                 members_list[n] = member[1:-1]
                 break
+            #Recursive calculation inside parenthesis
             reduced_par, reduced_list = ft_calculate(member[start:end], variable, True)
             if len(ft_split_sum(reduced_par, variable)) > 1:
                 others = members_list[n].replace(member[start - 1:end + 1], "__").split("_")
@@ -389,34 +390,39 @@ def deal_with_par(members_list, variable):
             member = members_list[n]
     return(members_list)
 
-def ft_distrib_div(l_member_list, r_member_list, variable):
+def clean_zeros(member_list, variable):
+    for i, elem in enumerate(member_list):
+        if variable + "^0.0" in elem:
+            var_pow, start = ft_get_power(elem, variable)
+            member_list[i] = elem[:start-2]
+    return member_list
+
+def clean_powers(member_list, variable):
+    #Make "/x" or "x^-1" dissapear
     idx = -1
     power = 0
-
-    def clean_zeros(member_list):
-        for i, elem in enumerate(member_list):
-            if variable + "^0.0" in elem:
-                var_pow, start = ft_get_power(elem, variable)
-                member_list[i] = elem[:start-2]
-        return member_list
-    clean_zeros(l_member_list)
-    clean_zeros(r_member_list)
-    #Make "/x" or "x^-1" dissapear
-    for i, elem in enumerate(l_member_list):
+    for i, elem in enumerate(member_list):
         if "/" + variable in elem:
             new_pow = 1
             if variable + "^" in elem:
                 new_pow, start = ft_get_power(elem, variable)
                 new_pow -= 1
-                l_member_list[i] = elem[:start - 1]
-                l_member_list[i] = l_member_list[i].replace("/" + variable, variable + "^" + str(new_pow))
+                member_list[i] = elem[:start - 1]
+                member_list[i] = member_list[i].replace("/" + variable, variable + "^" + str(new_pow))
             else:
-                l_member_list[i] = l_member_list[i].replace("/" + variable, "")
+                member_list[i] = member_list[i].replace("/" + variable, "")
                 power = new_pow
             idx = i
         elif variable + "^-" in elem:
             idx = i
         i = 0
+    return (member_list, idx, power)
+
+def ft_distrib_div(l_member_list, r_member_list, variable):
+    clean_zeros(l_member_list, variable)
+    clean_zeros(r_member_list, variable)
+    l_member_list, idx, power = clean_powers(l_member_list, variable)
+    i = 0
     #Calc new powers by distribution
     if idx != -1:
         while i < len(l_member_list):
@@ -459,7 +465,48 @@ def ft_distrib_div(l_member_list, r_member_list, variable):
                 else:
                     var_pow, start = ft_get_power(elem, variable)
                     r_member_list[k] = r_member_list[k][:start] + str(var_pow + power)
-    return clean_zeros(l_member_list), clean_zeros(r_member_list)
+    return clean_zeros(l_member_list, variable), clean_zeros(r_member_list, variable)
+
+def ft_reduce_members(equation, members_list, variable):
+    l_member = members_list[0]
+    r_member = members_list[1]
+    #Split/Prod left members
+    l_member_list = ft_split_sum(l_member, variable)
+    #Split/Prod right members
+    r_member_list = ft_split_sum(r_member, variable)
+    run = True
+    while run:
+        #Dispatch divisions
+        run = False
+        l_member_list, r_member_list = ft_distrib_div(l_member_list, r_member_list, variable)
+        r_member_list, l_member_list = ft_distrib_div(r_member_list, l_member_list, variable)
+        #While there is negative division
+        for elem in l_member_list + r_member_list:
+            if variable + "^-" in elem:
+                run = True
+    if l_member_list or r_member_list:
+        if len(l_member_list) > 0:
+            i = 0
+            for elem in r_member_list:
+                #Rev r_member's sign
+                if elem[0] == "+":
+                    r_member_list[i] = "-" + elem[1:]     
+                elif elem[0] == "-":
+                    r_member_list[i] = "+" + elem[1:]
+                elif elem[0] != "+" and elem[0] != "-":
+                    r_member_list[i] = "-" + elem
+                i += 1
+        #Merge members
+        l_member_list += r_member_list
+        #Sum by degree
+        l_member_list = ft_dispatch(l_member_list, variable)
+        if "=" in equation or [s for s in l_member_list if variable in s] and is_par == False:
+            reduced = "".join(map(str, l_member_list)) + "=0"
+        else:
+            reduced = "".join(map(str, l_member_list))
+    else:
+        return("None", [])
+    return(reduced, l_member_list)
 
 def ft_calculate(equation, variable, is_par):
     reduced = "None"
@@ -467,45 +514,10 @@ def ft_calculate(equation, variable, is_par):
     #Split eq in 2
     members_list = equation.split("=")
     #Deal with '()'
-    members_list = deal_with_par(members_list, variable)                        
+    members_list = deal_with_par(members_list, variable)
+    #Reduce to one member
     if len(members_list) == 2:
-        l_member = members_list[0]
-        r_member = members_list[1]
-        #Split/Prod left members
-        l_member_list = ft_split_sum(l_member, variable)
-        #Split/Prod right members
-        r_member_list = ft_split_sum(r_member, variable)
-        run = True
-        while run:
-            #Dispatch divisions
-            run = False
-            l_member_list, r_member_list = ft_distrib_div(l_member_list, r_member_list, variable)
-            r_member_list, l_member_list = ft_distrib_div(r_member_list, l_member_list, variable)
-            for elem in l_member_list + r_member_list:
-                if variable + "^-" in elem:
-                    run = True
-        if l_member_list or r_member_list:
-            if len(l_member_list) > 0:
-                i = 0
-                for elem in r_member_list:
-                    #Rev r_member's sign
-                    if elem[0] == "+":
-                        r_member_list[i] = "-" + elem[1:]     
-                    elif elem[0] == "-":
-                        r_member_list[i] = "+" + elem[1:]
-                    elif elem[0] != "+" and elem[0] != "-":
-                        r_member_list[i] = "-" + elem
-                    i += 1
-            #Merge members
-            l_member_list += r_member_list
-            #Sum by degree
-            l_member_list = ft_dispatch(l_member_list, variable)
-            if "=" in equation or [s for s in l_member_list if variable in s] and is_par == False:
-                reduced = "".join(map(str, l_member_list)) + "=0"
-            else:
-                reduced = "".join(map(str, l_member_list))
-        else:
-            return("None", [])
+        reduced, l_member_list = ft_reduce_members(equation, members_list, variable)
     else:
         l_member_list = ft_split_sum(members_list[0], variable)
         l_member_list = ft_dispatch(l_member_list, variable)

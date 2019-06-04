@@ -2,8 +2,11 @@
 42 Project : calculator and 1st, 2nd degree solver
 
 ## requirements
+```
 Python3
-tkinter (optional)
+matplotlib
+tkinter
+```
 
 ## Usage
 ```

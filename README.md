@@ -1,5 +1,5 @@
 # ComputorV1
-42 Project : calculator and 1st,2nd degree solver
+42 Project : calculator and 1st, 2nd degree solver
 
 ## requirements
 Python3
@@ -12,7 +12,7 @@ python3 computor.py [--gui] ["calcul/equation string"]
 or 
 
 python3 computor.py [--gui]
-> [calcul/equation string]
+> calcul/equation string
 ```
 
 ## Limitations
@@ -21,5 +21,6 @@ python3 computor.py [--gui]
 
 ## Tests
 ```
-python3 tests.py
+python3 tests.py [-A] or [0][1][2]
+
 ```

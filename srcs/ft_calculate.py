@@ -25,7 +25,8 @@ def ft_sum_deg(members_list, variable, deg):
     for elem in members_list:
         i = 0
         for char in elem:
-            if char == variable:                                                #Sum-up factors
+            #Sum-up factors
+            if char == variable:
                 if re.match('^[+-]+$', elem[0:i]):
                     res += float(elem[0:i] + "1")
                 elif re.match('^[0-9+-.]+$', elem[0:i]):
@@ -41,7 +42,8 @@ def ft_sum_deg(members_list, variable, deg):
         else:
             sign = "+"
         if deg > 1:
-            return (sign + s_res + variable + "^" + str(deg) if res > 0 else s_res + variable + "^" + str(deg))
+            return (sign + s_res + variable + "^" + \
+                    str(deg) if res > 0 else s_res + variable + "^" + str(deg))
         else:
             return (sign + s_res + variable)
     else:
@@ -50,7 +52,8 @@ def ft_sum_deg(members_list, variable, deg):
 def ft_sum(members_list, variable, deg):
     if deg != 0:
         return (ft_sum_deg(members_list, variable, deg))
-    elif deg == 0:                                                              #Sum-up digits
+    #Sum-up digits
+    elif deg == 0:
         return (ft_sum_deg_0(members_list, variable))
     
 def ft_dispatch(members_list, variable):
@@ -60,7 +63,8 @@ def ft_dispatch(members_list, variable):
     deg_3_list = []
     deg_4_list = []
     ordered_list = []
-    for member in members_list:                                                 #Dispatch by degree
+    #Dispatch by degree
+    for member in members_list:
         if "^4" in member:
             deg_4_list.append(member)
         elif "^3" in member:
@@ -73,9 +77,10 @@ def ft_dispatch(members_list, variable):
             deg_0_list.append(member)
         else:
             return ([])
+    #Sum_up by degrees
     deg_4 = ft_sum(deg_4_list, variable, 4)
     deg_3 = ft_sum(deg_3_list, variable, 3)
-    deg_2 = ft_sum(deg_2_list, variable, 2)                                     #Sum_up by degrees
+    deg_2 = ft_sum(deg_2_list, variable, 2)
     deg_1 = ft_sum(deg_1_list, variable, 1)
     deg_0 = ft_sum(deg_0_list, variable, 0)
     if deg_4:
@@ -88,7 +93,8 @@ def ft_dispatch(members_list, variable):
         ordered_list.append(deg_1)
     if deg_0:
         ordered_list.append(deg_0)
-    if len(ordered_list) == 0:                                                  #If Null result
+    #If Null result
+    if len(ordered_list) == 0:
         ordered_list.append("0")
     return(ordered_list)
 
@@ -160,8 +166,9 @@ def ft_split_power(members_list):
 def ft_prod_deg_0(members_list):
     res = 1
     for fact in members_list:
+        #Power first
         if "^" in fact:
-            splited = ft_split_power(members_list)                              #Power first
+            splited = ft_split_power(members_list)
     for idx, fact in enumerate(members_list):
         if fact[0] == "*" or idx == 0:
             if len(fact) > 1:
@@ -183,15 +190,17 @@ def ft_split_prod_01_var(elem, variable, i):
             k = j + 1
             var_start = -1
             var_end = 0
+            #Grab variable
             while (k < len(elem) and not(elem[k] in "*/")):
-                if i > 0 and elem[k] == variable:                               #Grab variable
+                if i > 0 and elem[k] == variable:
                     var_start = k
                     var_end = k
                 k += 1
                 if i > 0 and var_start != -1:
                     var_end += 1
             splited.append(elem[j:k if var_start == -1 else var_start])
-            if i > 0 and var_start != -1:                                       #Var to reintegrate
+            #Var to reintegrate
+            if i > 0 and var_start != -1:
                 if "^1" in var:
                     var = elem[var_start]
                 else:
@@ -208,7 +217,8 @@ def ft_split_prod_more_vars(elem, variable, i):
             var_start = -1
             var_end = 0
             while (k < len(elem) and not(elem[k] in "*/")):
-                if i > 0 and elem[k] == variable:                               #Grab variable
+                #Grab variable
+                if i > 0 and elem[k] == variable:
                     var_start = k
                     var_end = k
                 k += 1
@@ -222,7 +232,8 @@ def ft_split_prod_more_vars(elem, variable, i):
             factor = elem[j:k if var_start == -1 else var_start]
             if not (variable in factor) and re.search("[0-9]", factor):
                 splited.append(factor)
-            if i > 0 and var_start != -1:                                       #Var to reintegrate
+            #Var to reintegrate
+            if i > 0 and var_start != -1:
                 var = elem[var_start]
                 if elem[j] == "*":
                     if variable + "^" in elem[var_start:var_end]:
@@ -243,15 +254,19 @@ def ft_split_prod_more_vars(elem, variable, i):
 def ft_split_prod(members_list, variable):
     for idx, elem in enumerate(members_list):
         i = 0
-        for char in elem:                                                       #Count vars
+        for char in elem:
+            #Count vars
             if char == variable:
                 i = i + 1
         if re.search("[*/]", elem):
-            if i >= 2:                                                          #Prod degrees >= 2
+            if i >= 2:
+                #Prod degrees >= 2
                 members_list[idx] = ft_split_prod_more_vars(elem, variable, i)
-            else:                                                               #Prod degrees 0 and 1
+            else:
+                #Prod degrees 0 and 1
                 members_list[idx] = ft_split_prod_01_var(elem, variable, i)
-    members_list = ft_split_power(members_list)                                 #Look for powers
+    #Look for powers
+    members_list = ft_split_power(members_list)
     return(members_list)
 
 def ft_split_sum(member, variable):
@@ -260,25 +275,28 @@ def ft_split_sum(member, variable):
     while (i < len(member)):
         if member[i] in "+-" or i == 0:
             j = i + 1
+            #Between each "+" or "-" (not preceded by "/" or "*")
             while (j < len(member) and (not(member[j] in "+-") \
                     or member[j - 1] in "/*^")):
-                j += 1                                                          #Between each "+" or "-" (not preceded by "/" or "*"):
+                j += 1
             if member[i:j] != "0":
-                signed = member[i:j]                                                #Slice a single member
+                #Slice a single member
+                signed = member[i:j]
+                #Append "+" if needed
                 if not(member[i] in "+-") and i == 0:
-                    signed = "+" + signed                                           #Append "+" if needed
+                    signed = "+" + signed                                       
                 splited.append(signed)
                 i = j - 1
         i += 1
     i = 0
+    #Turn "--" into "+" for next elem
     for elem in splited:
-        if elem == "-" and \
-           i + 1 < len(splited) and \
-           splited[i + 1][0] == "-":                                            #Turn "--" into "+" for next elem
+        if elem == "-" and i + 1 < len(splited) and splited[i + 1][0] == "-":
             splited[i + 1] = splited[i + 1].replace("-", "+")
             splited.pop(i)
         i += 1
-    splited = ft_split_prod(splited, variable)                                  #Make member product
+    #Make member product
+    splited = ft_split_prod(splited, variable)                                  
     if splited:
         return (splited)
     else:
@@ -383,8 +401,8 @@ def ft_distrib_div(l_member_list, r_member_list, variable):
         return member_list
     clean_zeros(l_member_list)
     clean_zeros(r_member_list)
-
-    for i, elem in enumerate(l_member_list):                                    #Make "/x" or "x^-1" dissapear
+    #Make "/x" or "x^-1" dissapear
+    for i, elem in enumerate(l_member_list):
         if "/" + variable in elem:
             new_pow = 1
             if variable + "^" in elem:
@@ -399,7 +417,8 @@ def ft_distrib_div(l_member_list, r_member_list, variable):
         elif variable + "^-" in elem:
             idx = i
         i = 0
-    if idx != -1:                                                               #Calc new powers by distribution
+    #Calc new powers by distribution
+    if idx != -1:
         while i < len(l_member_list):
             if i == idx or "^-" in l_member_list[i]:
                 for j, char in enumerate(l_member_list[i]):
@@ -430,7 +449,8 @@ def ft_distrib_div(l_member_list, r_member_list, variable):
                     idx -= 1
                 i -= 1
             i += 1
-        for k, elem in enumerate(r_member_list):                                #Apply new powers
+        #Apply new powers
+        for k, elem in enumerate(r_member_list):
             if not (variable in elem):
                 r_member_list[k] += variable + ("^" + str(power) if power != 0 and power != 1 else "")
             else:
@@ -444,15 +464,20 @@ def ft_distrib_div(l_member_list, r_member_list, variable):
 def ft_calculate(equation, variable, is_par):
     reduced = "None"
     equation = equation.replace(" ", "")
-    members_list = equation.split("=")                                          #Split eq in 2
-    members_list = deal_with_par(members_list, variable)                        #Deal with '()'
+    #Split eq in 2
+    members_list = equation.split("=")
+    #Deal with '()'
+    members_list = deal_with_par(members_list, variable)                        
     if len(members_list) == 2:
         l_member = members_list[0]
         r_member = members_list[1]
-        l_member_list = ft_split_sum(l_member, variable)                        #Split/Prod left members
-        r_member_list = ft_split_sum(r_member, variable)                        #Split/Prod right members
+        #Split/Prod left members
+        l_member_list = ft_split_sum(l_member, variable)
+        #Split/Prod right members
+        r_member_list = ft_split_sum(r_member, variable)
         run = True
-        while run:                                                              #Dispatch divisions
+        while run:
+            #Dispatch divisions
             run = False
             l_member_list, r_member_list = ft_distrib_div(l_member_list, r_member_list, variable)
             r_member_list, l_member_list = ft_distrib_div(r_member_list, l_member_list, variable)
@@ -462,7 +487,8 @@ def ft_calculate(equation, variable, is_par):
         if l_member_list or r_member_list:
             if len(l_member_list) > 0:
                 i = 0
-                for elem in r_member_list:                                      #Rev r_member's sign
+                for elem in r_member_list:
+                    #Rev r_member's sign
                     if elem[0] == "+":
                         r_member_list[i] = "-" + elem[1:]     
                     elif elem[0] == "-":
@@ -470,8 +496,10 @@ def ft_calculate(equation, variable, is_par):
                     elif elem[0] != "+" and elem[0] != "-":
                         r_member_list[i] = "-" + elem
                     i += 1
-            l_member_list += r_member_list                                      #Merge members
-            l_member_list = ft_dispatch(l_member_list, variable)                #Sum by degree
+            #Merge members
+            l_member_list += r_member_list
+            #Sum by degree
+            l_member_list = ft_dispatch(l_member_list, variable)
             if "=" in equation or [s for s in l_member_list if variable in s] and is_par == False:
                 reduced = "".join(map(str, l_member_list)) + "=0"
             else:
@@ -485,7 +513,8 @@ def ft_calculate(equation, variable, is_par):
             reduced = "".join(map(str, l_member_list)) + "=0"
         else:
             reduced = "".join(map(str, l_member_list))
-    if len(reduced) > 0 and reduced[0] == "+":                                  #remove first "+"
+    #remove first "+"
+    if len(reduced) > 0 and reduced[0] == "+":
         reduced = reduced[1:]
     if reduced == "0=0" and variable != "None":
         reduced = variable + " = " + variable

@@ -71,6 +71,9 @@ def ft_solve(reduced, variable, deg):
         discr, tab = ft_discriminator(reduced, variable)
         if discr >= 0:
             roots = ft_find_roots(discr, tab, variable)
+            for i, root in enumerate(roots):
+                if root == "-0.0":
+                    roots[i] = root[1:]
             if len(roots) == 1:
                 result = variable + "= " + roots[0]
             elif len(roots) == 2:

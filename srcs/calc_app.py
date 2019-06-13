@@ -15,6 +15,7 @@ class Calc(object):
                         "([+-][*/])",           # - or + before * or /
                         "([a-zA-Z][a-zA-Z])",   # letter followed by letter
                         "([a-zA-Z][0-9])",      # letter followed by digit
+                        #"([\^][a-zA-Z])",       # variable power
                         "[+\-*/\^]$",           # operator followed by power
                         "^[*/\^]",              # division followed by power
                         "([\)][\(])",           # chained par without operator
@@ -102,20 +103,26 @@ class Calc(object):
                         exit(0)
                     else:
                         return (False)
-            elif re.search("([a-zA-Z][\^][5-9])", equation) or \
-                 re.search("([a-zA-Z][\^][0-9]{2})", equation):
-                if gui == False:
-                    print("Error: Too high degree")
-                    exit(0)
-                else:
-                    return (False)
-                return (False)
             elif char == "i" or char == "I":
                 if gui == False:
                     print("Error: 'i' or 'I' var forbidden")
                     exit(0)
                 else:
                     return (False)
+        if re.search("([a-zA-Z][\^][5-9])", equation) or \
+                        re.search("([a-zA-Z][\^][0-9]{2})", equation):
+            if gui == False:
+                print("Error: Too high degree")
+                exit(0)
+            else:
+                return (False)
+            return (False)
+        if re.search("([\^][a-zA-Z])", equation):
+            if gui == False:
+                print("Error: Variable power not allowed")
+                exit(0)
+            else:
+                return (False)
         # Parse variables
         var_count = 0
         for char in equation:
@@ -129,6 +136,7 @@ class Calc(object):
                     exit(0)
                 else:
                     return (False)
+
         # Parse parenthesis
         o_par_count = 0
         c_par_count = 0

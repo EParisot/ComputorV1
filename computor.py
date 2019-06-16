@@ -4,6 +4,7 @@ from srcs.gui_app import App
 from srcs.calc_app import Calc
 
 import sys
+from sys import exit
 
 def print_usage():
     print("Usage: python computor [--gui] ['2nd_degree_equation']\n" + \

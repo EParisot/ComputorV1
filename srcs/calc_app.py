@@ -4,6 +4,7 @@ from srcs.ft_calculate import ft_calculate
 from srcs.ft_solve import ft_solve
 
 import re
+from sys import exit
 
 class Calc(object):
 
@@ -15,12 +16,8 @@ class Calc(object):
                         "([+-][*/])",           # - or + before * or /
                         "([a-zA-Z][a-zA-Z])",   # letter followed by letter
                         "([a-zA-Z][0-9])",      # letter followed by digit
-                        #"([\^][a-zA-Z])",       # variable power
                         "[+\-*/\^]$",           # operator followed by power
                         "^[*/\^]",              # division followed by power
-                        "([\)][\(])",           # chained par without operator
-                        "([\)][0-9a-zA-Z])",    # closing par without operator
-                        "([0-9a-zA-Z][\(])",    # opening par without operator
                         "[a-zA-Z][\^][0-9][.]"  # floating point power
                         ]
 
@@ -53,7 +50,10 @@ class Calc(object):
         discr = ""
         # Calculate equation's result
         if degree_val == "None":
-            result = reduced
+            if "=" in reduced:
+                result = "None"
+            else:
+                result = reduced
             reduced = "None"
         else:
             discr, result = ft_solve(reduced, self.variable, int(degree_val))
@@ -77,8 +77,12 @@ class Calc(object):
         return (reduced, degree_val, discr, result)
 
     def parse(self, equation, gui):
-        if len(equation) > 0 and \
-           re.match("^[a-zA-Z0-9.+\-/*\^= \(\)]+$", equation) and \
+        if len(equation) == 0:
+            if gui == False:
+                print("Error: Empty input")
+                exit(0)
+            return (False)
+        if re.match("^[a-zA-Z0-9.+\-/*\^= ]+$", equation) and \
            any(char.isdigit() for char in equation) and \
            all(not re.search(filt, equation) for filt in self.filters):
             equation = equation.replace(",", ".")
@@ -123,7 +127,6 @@ class Calc(object):
                 exit(0)
             else:
                 return (False)
-        # Parse variables
         var_count = 0
         for char in equation:
             if char == self.variable:
@@ -136,20 +139,5 @@ class Calc(object):
                     exit(0)
                 else:
                     return (False)
-
-        # Parse parenthesis
-        o_par_count = 0
-        c_par_count = 0
-        for char in equation:
-            if char == "(":
-                o_par_count += 1
-            elif char == ")":
-                c_par_count += 1
-        if o_par_count != c_par_count:
-            if gui == False:
-                print("Error: Incorrect '()'")
-                exit(0)
-            else:
-                return (False)
         return (True)
 

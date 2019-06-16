@@ -154,13 +154,11 @@ def ft_prod_deg_0(members_list):
     for fact in members_list:
         #Power first
         if "^" in fact:
-            splited = ft_split_power(members_list)
+            ft_split_power(members_list)
     for idx, fact in enumerate(members_list):
         if fact[0] == "*" or idx == 0:
             if len(fact) > 1:
                 res *= float(fact[1 if idx != 0 else 0:])
-            else:
-                res = str(res)
         elif fact[0] == "/":
             if len(fact) > 1:
                 res /= float(fact[1:])
@@ -282,7 +280,7 @@ def ft_split_sum(member, variable):
             splited.pop(i)
         i += 1
     #Make member product
-    splited = ft_split_prod(splited, variable)                                  
+    splited = ft_split_prod(splited, variable)
     if splited:
         return (splited)
     else:
@@ -294,89 +292,6 @@ def ft_iseven_par(member):
         if char in "()":
             count += 1
     return(True if count % 2 == 0 else False)
-
-def deal_with_par(members_list, variable):
-    #Get start and end of parenthesis
-    for n, member in enumerate(members_list):
-        while "(" in member and ")" in member:
-            for idx, char in enumerate(member):
-                if char == "(":
-                    i = 0
-                    start = idx + 1
-                    for idx, char in enumerate(member[start:]):
-                        if char == "(":
-                            i += 1
-                        elif char == ")" and i > 0:
-                            i -= 1
-                        elif char == ")" and i == 0:
-                            end = start + idx
-                            break
-            if not ("(" in member[1:-1] or ")" in member[1:-1]):
-                members_list[n] = member[1:-1]
-                break
-            #"Recursive" reduction inside parenthesis
-            reduced_par, reduced_list = ft_calculate(member[start:end], variable, True)
-            #Replace result
-            if len(ft_split_sum(reduced_par, variable)) > 1:
-                others = members_list[n].replace(member[start - 1:end + 1], "__").split("_")
-                k = 0
-                for item, element in enumerate(others):
-                    if len(element) == 0:
-                        if k != 0:
-                            others.pop(item)
-                        k += 1
-                i = 0
-                for idx, other in enumerate(others):
-                    if len(other) == 0:
-                        i = idx
-                        break
-                j = 0
-                idx = 0
-                for other in others:
-                    if len(other) > 0:
-                        new_reduced_par = ft_split_sum(reduced_par, variable)
-                        if idx == i - 1:
-                            if not (other[-1] in "+-"):
-                                if other[0] == "(" and ft_iseven_par(other) == False:
-                                    other = other[1:]
-                                    others[idx] = "("
-                                if len(other) > 0 and other[0] != "-":
-                                    other = "+" + other
-                                if len(other) > 0:
-                                    for idx2, elem in enumerate(new_reduced_par):
-                                        if len(other) > 0 and not (other[-1] in "*/^"):
-                                            other = other + "*"
-                                        new_reduced_par[idx2] = other + elem
-                                    others[i] = "".join(map(str, new_reduced_par))
-                                    if others[i - 1 if i - 1 >= 0 else 0] != "(":
-                                        others.pop(i - 1)
-                                    j += 1
-                            else:
-                                others[i] = reduced_par
-                                member = members_list[n] = "".join(map(str, others))
-                        elif idx == i + 1:
-                            if not (other[0] in "+-)"):
-                                if other[-1] == ")" and ft_iseven_par(other) == False:
-                                    other = other[:-1]
-                                    others[idx] = ")"
-                                if len(other) > 0:
-                                    for idx2, elem in enumerate(new_reduced_par):
-                                        new_reduced_par[idx2] = elem + other
-                                    others[i] = "".join(map(str, new_reduced_par))
-                                    others.pop(i + 1)
-                                    j += 1
-                            elif other[0] in "+-":
-                                others[i] = reduced_par
-                                member = members_list[n] = "".join(map(str, others))
-                            break
-                    idx += 1
-                if j == 0:
-                    others[i] = member[start - 1:end + 1]
-                members_list[n] = "".join(map(str, others))
-            else:
-                members_list[n] = members_list[n].replace(member[start - 1:end + 1], reduced_par)
-            member = members_list[n]
-    return(members_list)
 
 def clean_zeros(member_list, variable):
     for i, elem in enumerate(member_list):
@@ -431,7 +346,7 @@ def ft_distrib_div(l_member_list, r_member_list, variable):
                             else:
                                 other_power += 1
                             l_member_list[i] = l_member_list[i][:j-1] + \
-                                               variable + "^" + str(other_power)
+                                    variable + "^" + str(other_power)
             else:
                 if l_member_list[i][0] == "-":
                     r_member_list.append("+" + l_member_list[i][1:])
@@ -448,7 +363,7 @@ def ft_distrib_div(l_member_list, r_member_list, variable):
         for k, elem in enumerate(r_member_list):
             if not (variable in elem):
                 r_member_list[k] += variable + \
-                            ("^" + str(power) if power != 0 and power != 1 else "")
+                        ("^" + str(power) if power != 0 and power != 1 else "")
             else:
                 if not ("^" in elem):
                     r_member_list[k] += "^" + str(1 + power)
@@ -493,8 +408,7 @@ def ft_reduce_members(equation, members_list, variable):
         l_member_list += r_member_list
         #Sum by degree
         l_member_list = ft_dispatch(l_member_list, variable)
-        if "=" in equation or [s for s in l_member_list if variable in s]\
-           and is_par == False:
+        if "=" in equation or [s for s in l_member_list if variable in s]:
             reduced = "".join(map(str, l_member_list)) + "=0"
         else:
             reduced = "".join(map(str, l_member_list))
@@ -507,8 +421,6 @@ def ft_calculate(equation, variable, is_par):
     equation = equation.replace(" ", "")
     #Split eq in 2
     members_list = equation.split("=")
-    #Deal with '()'
-    members_list = deal_with_par(members_list, variable)
     #Reduce to one member
     if len(members_list) == 2:
         reduced, l_member_list = \

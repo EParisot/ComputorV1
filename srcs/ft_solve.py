@@ -85,4 +85,6 @@ def ft_solve(reduced, variable, deg):
             conj_res = solve_in_C(discr, tab, variable)
             result = "None in R, in C: " + variable + "1= " + conj_res[0] \
                      + " and " + variable + "2= " + conj_res[1]
+    else:
+        result = "None : Too high degree"
     return (discr, result)

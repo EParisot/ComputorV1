@@ -44,11 +44,11 @@ def bastard_tests(usage):
              "x^42",
 
              "4x^0/8=4",
-             "3+(4*(3*4)))",
-             "(3+4)(3*4)",
              
              "3^x=0",
-             "3x^4.2=0"
+             "3x^4.2=0",
+
+             "x/x=0",
              ]
 
     res = 0
@@ -56,7 +56,7 @@ def bastard_tests(usage):
     for test in bar(tests):
         result = subprocess.run(["python", "computor.py", test], stdout=subprocess.PIPE)
         out = result.stdout.decode('utf-8').strip()
-        if "Error: " in out or out == usage:
+        if "Error: " in out or "None" in out or out == usage:
             check = "\033[1;32;40m OK"
             res += 1
         else:
@@ -116,10 +116,6 @@ def tests_deg_0():
              "42x^4/1x^4",
              "4/56.8*-43/12.4--45.678*0.2",
 
-             "3+(4*(3*4))",
-             "(3+4)*(3*4)",
-             "(3+(4+12))*(3*(4 + 12))",
-
              "3^4.2",
              "3^-4.2",
 
@@ -167,15 +163,6 @@ def tests_deg_1():
              ["4+2=5/x", "6.0x-5.0=0", "x= 0.8333333333333334"],
              ["4/x^-1-3x+2=0", "x+2.0=0", "x= -2.0"],
              ["0=4/x^-1-3x+2", "-1.0x-2.0=0", "x= -2.0"],
-
-             ["3+(4*(3*4x))", "48.0x+3.0=0", "x= -0.0625"],
-             ["((12x+4)*(3*4))", "144.0x+48.0=0", "x= -0.3333333333333333"],
-             ["(3*4)*(12x+4)", "144.0x+48.0=0", "x= -0.3333333333333333"],
-             ["(12x+4)*(3*4)", "144.0x+48.0=0", "x= -0.3333333333333333"],
-             ["(3+4x^1)*(3*4)", "48.0x+36.0=0", "x= -0.75"],
-             ["((3*4)*(12x+4))", "144.0x+48.0=0", "x= -0.3333333333333333"],
-
-             ["(3+(4+12x))*(3*(4 + 12))", "576.0x+336.0=0", "x= -0.5833333333333334"],
          ]
 
     res = 0
@@ -212,6 +199,7 @@ def tests_deg_2():
 
              ["4/x-3x+2=0", "-3.0x^2+2.0x+4.0=0", ""],
              ["4x^-1-3x+2=0", "-3.0x^2+2.0x+4.0=0", ""],
+
          ]
 
     res = 0
@@ -222,8 +210,10 @@ def tests_deg_2():
         if not("Error :" in out):
             res_tab = out.split(new_line)
             reduced = res_tab[1].split(" : ")[1]
-            result = res_tab[3].split(" : ")[1]
-
+            if "Discriminator" in res_tab[3]:
+                result = res_tab[3].split(" : ")[1]
+            else:
+                result = res_tab[2].split(" : ")[1]
             if reduced == test[1]:# and result == test[2]:
                 check = "\033[1;32;40m OK"
                 res += 1

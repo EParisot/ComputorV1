@@ -73,7 +73,7 @@ class Calc(object):
                 else:
                     print("Result : " + result)
             else:
-                print("Result : " + result)
+                print("Result: " + result)
         return (reduced, degree_val, discr, result)
 
     def parse(self, equation, gui):

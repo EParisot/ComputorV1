@@ -23,16 +23,17 @@ if __name__ == "__main__":
             elif arg == "--gui":
                 gui = True
             else:
-                equation = calc.parse(arg, gui)
-                if equation:
-                    if gui:
-                        App(equation).mainloop()
-                        exit(0)
+                equation = arg
+        equation = calc.parse(equation, gui)
+        if equation:
+            if gui:
+                App(equation).mainloop()
+                exit(0)
 
-                    else:
-                        calc.calcul(equation, gui)
-                        exit(0)
-        if gui:
+            else:
+                calc.calcul(equation, gui)
+                exit(0)
+        elif gui:
             App("").mainloop()
             exit(0)
     else:

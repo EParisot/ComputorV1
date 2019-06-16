@@ -260,7 +260,7 @@ class App(tk.Tk):
                 degree_val.grid(row=1, column=1)
 
                 if self.discr.get() != "":
-                    discr_label = tk.Label(self.infos_frame, text="Discriminator : ", font=16)
+                    discr_label = tk.Label(self.infos_frame, text="Discriminant : ", font=16)
                     discr_label.grid(row=2, column=0, sticky='w')
 
                     discr_val = tk.Label(self.infos_frame, textvariable=self.discr, font=18)

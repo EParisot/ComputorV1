@@ -103,7 +103,7 @@ def ft_sqrt(number):
         i = 0
         while (prec >= 0.0001):
             while i * i <= number:
-                if ft_abs(i * i - number) < 0.001:
+                if ft_abs(i * i - number) < 0.01:
                     return(i)
                 i += prec
             i = 0
@@ -156,7 +156,7 @@ def ft_prod_deg_0(members_list):
         if "^" in fact:
             ft_split_power(members_list)
     for idx, fact in enumerate(members_list):
-        if fact[0] == "*" or idx == 0:
+        if fact[0] == "*":# or idx == 0:
             if len(fact) > 1:
                 res *= float(fact[1 if idx != 0 else 0:])
         elif fact[0] == "/":
@@ -164,6 +164,9 @@ def ft_prod_deg_0(members_list):
                 res /= float(fact[1:])
             else:
                 res = str(res) + "/"
+        elif idx == 0:
+            if len(fact) > 1:
+                res *= float(fact[1 if idx != 0 else 0:])
     return(str(res))
 
 def ft_split_prod_01_var(elem, variable, i):

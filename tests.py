@@ -49,6 +49,8 @@ def bastard_tests(usage):
              "3x^4.2=0",
 
              "x/x=0",
+
+             "8 * X^0 - 6 * X^1 + 0 * X^2 - 5.6 * X^3 = 3 * X^0",
              ]
 
     res = 0
@@ -56,7 +58,7 @@ def bastard_tests(usage):
     for test in bar(tests):
         result = subprocess.run(["python", "computor.py", test], stdout=subprocess.PIPE)
         out = result.stdout.decode('utf-8').strip()
-        if "Error: " in out or "None" in out or out == usage:
+        if "Error: " in out or "None" in out or out == usage or len(out) == 0:
             check = "\033[1;32;40m OK"
             res += 1
         else:
@@ -118,7 +120,6 @@ def tests_deg_0():
 
              "3^4.2",
              "3^-4.2",
-
              ]
 
     res = 0
@@ -129,7 +130,7 @@ def tests_deg_0():
         out = result.stdout.decode('utf-8').strip()
         if not("Error :" in out):
             try:
-                result = out.split(" : ")[1].replace("=0", "")
+                result = out.split(": ")[1].replace("=0", "")
                 real = eval(test.replace("^", "**"))
                 if float(result) == float(real):
                     check = "\033[1;32;40m OK"
@@ -137,7 +138,7 @@ def tests_deg_0():
                 else:
                     check = "\033[1;31;40m NOK, expected : " + str(real)
             except:
-                if float(out.split(" : ")[1]) == 42 or float(out.split(" : ")[1]) == -42:
+                if float(out.split(": ")[1]) == 42 or float(out.split(": ")[1]) == -42:
                     check = "\033[1;32;40m OK"
                     res += 1
                 else:
@@ -151,7 +152,8 @@ def tests_deg_0():
 def tests_deg_1():
     print("\n\t\033[1;35;40m  -Testing degree 1:\n")
     #remember to use "42" or "-42" as wierd results (to avoid SyntaxError(s)) !
-    tests = [["2x-2=8", "2.0x-10.0=0", "x= 5.0"],
+    tests = [["5 * X^0 + 4 * X^1 = 4 * X^0", "4.0X+1.0=0", "X= -0.25"],
+             ["2x-2=8", "2.0x-10.0=0", "x= 5.0"],
              ["2x+4x-12=6", "6.0x-18.0=0", "x= 3.0"],
              ["2x^1+4x-12=6", "6.0x-18.0=0", "x= 3.0"],
              ["2x^1+4x-12=12x", "-6.0x-12.0=0", "x= -2.0"],
@@ -163,6 +165,11 @@ def tests_deg_1():
              ["4+2=5/x", "6.0x-5.0=0", "x= 0.8333333333333334"],
              ["4/x^-1-3x+2=0", "x+2.0=0", "x= -2.0"],
              ["0=4/x^-1-3x+2", "-1.0x-2.0=0", "x= -2.0"],
+
+             ["x=x/x", "x-1.0=0", "x= 1.0"],
+             ["x=x/1x", "x-1.0=0", "x= 1.0"],
+             ["x=1x/x", "x-1.0=0", "x= 1.0"],
+             ["1x=x/x", "x-1.0=0", "x= 1.0"],
          ]
 
     res = 0
@@ -189,7 +196,8 @@ def tests_deg_1():
 def tests_deg_2():
     print("\n\t\033[1;35;40m  -Testing degree 2:\n")
     #remember to use "42" or "-42" as wierd results (to avoid SyntaxError(s)) !
-    tests = [["2x^2-2=8", "2.0x^2-10.0=0", ""],
+    tests = [["5 * X^0 + 4 * X^1 - 9.3 * X^2 = 1 * X^0", "-9.3X^2+4.0X+4.0=0", "X1= 0.9052204301066356 and X2= -0.47511290322491506"],
+             ["2x^2-2=8", "2.0x^2-10.0=0", ""],
              ["2x^2+4x-12=6", "2.0x^2+4.0x-18.0=0", ""],
              ["2x^2+4x-12=6", "2.0x^2+4.0x-18.0=0", ""],
              ["2x^2+4x-12=12x", "2.0x^2-8.0x-12.0=0", ""],
@@ -209,7 +217,7 @@ def tests_deg_2():
         if not("Error :" in out):
             res_tab = out.split(new_line)
             reduced = res_tab[1].split(" : ")[1]
-            if "Discriminator" in res_tab[3]:
+            if "Discriminant" in res_tab[3]:
                 result = res_tab[3].split(" : ")[1]
             else:
                 result = res_tab[2].split(" : ")[1]

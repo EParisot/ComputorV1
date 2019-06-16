@@ -50,7 +50,7 @@ class Calc(object):
         discr = ""
         # Calculate equation's result
         if degree_val == "None":
-            if "=" in reduced:
+            if "=" in reduced and self.variable not in reduced:
                 result = "None"
             else:
                 result = reduced
@@ -63,17 +63,17 @@ class Calc(object):
                 print("Reduced form : " + reduced)
                 if degree_val == "2":
                     if discr > 0:
-                        discr = ">0"
+                        discr = str(discr) + " >0"
                     elif discr < 0:
-                        discr = "<0"
+                        discr = str(discr) + " <0"
                     elif discr == 0:
-                        discr = "=0"
-                    print("Discriminator : " + discr)
+                        discr = str(discr) + " =0"
+                    print("Discriminant : " + discr)
                     print("Result(s) : " + result)
                 else:
                     print("Result : " + result)
             else:
-                print("Result: " + result)
+                print("Result : " + result)
         return (reduced, degree_val, discr, result)
 
     def parse(self, equation, gui):
@@ -83,7 +83,6 @@ class Calc(object):
                 exit(0)
             return (False)
         if re.match("^[a-zA-Z0-9.+\-/*\^= ]+$", equation) and \
-           any(char.isdigit() for char in equation) and \
            all(not re.search(filt, equation) for filt in self.filters):
             equation = equation.replace(",", ".")
             if self.check(equation, gui) == True:

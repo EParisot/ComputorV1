@@ -15,6 +15,7 @@ def print_usage():
 if __name__ == "__main__":
     calc = Calc()
     gui = False
+    equation = None
     if len(sys.argv) > 1:
         for arg in sys.argv[1:]:
             if arg in ("--usage", "--help", "--h"):
@@ -24,8 +25,8 @@ if __name__ == "__main__":
                 gui = True
             else:
                 equation = arg
-        equation = calc.parse(equation, gui)
         if equation:
+            equation = calc.parse(equation, gui)
             if gui:
                 App(equation).mainloop()
                 exit(0)

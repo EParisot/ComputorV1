@@ -77,7 +77,6 @@ def ft_dispatch(members_list, variable):
     for key in sorted(deg_dict.keys()):
         key_list.append(key)
         deg_lists.append(deg_dict[key])
-    
     #Sum_up by degrees
     sums_list = [None for _ in range(len(deg_lists))]
     ordered_list = []
@@ -163,7 +162,7 @@ def ft_prod_deg_0(members_list):
         if "^" in fact:
             ft_split_power(members_list)
     for idx, fact in enumerate(members_list):
-        if fact[0] == "*":# or idx == 0:
+        if fact[0] == "*":
             if len(fact) > 1:
                 res *= float(fact[1 if idx != 0 else 0:])
         elif fact[0] == "/":

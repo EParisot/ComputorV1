@@ -23,10 +23,11 @@ class Calc(object):
 
     def degree(self, reduced):
         if self.variable != "None":
-            if re.search("([a-zA-Z][\^][2-4])", reduced):
+            if re.search("([a-zA-Z][\^][2-9])", reduced):
                 for idx, char in enumerate(reduced):
                     if char == "^":
                         degree_val = int(reduced[idx + 1])
+                        break
             elif "^1" in reduced or \
                  (self.variable in reduced and not("^" in reduced)):
                 degree_val = 1
@@ -112,14 +113,6 @@ class Calc(object):
                     exit(0)
                 else:
                     return (False)
-        '''if re.search("([a-zA-Z][\^][5-9])", equation) or \
-                        re.search("([a-zA-Z][\^][0-9]{2})", equation):
-            if gui == False:
-                print("Error: Too high degree")
-                exit(0)
-            else:
-                return (False)
-            return (False)'''
         if re.search("([\^][a-zA-Z])", equation):
             if gui == False:
                 print("Error: Variable power not allowed")

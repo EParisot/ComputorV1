@@ -63,8 +63,8 @@ def ft_solve_deg_1(reduced, variable):
 def ft_solve(reduced, variable, deg):
     discr = ""
     result = ""
-    if reduced == "x = x" and variable != "None":
-        return(None, result + "x = R")
+    if reduced == variable + " = " + variable and variable != "None":
+        return(None, result + variable + " = R")
     if deg == 1:
         result = ft_solve_deg_1(reduced, variable)
     elif deg == 2:

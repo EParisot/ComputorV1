@@ -57,26 +57,33 @@ def ft_sum(members_list, variable, deg):
         return (ft_sum_deg_0(members_list, variable))
     
 def ft_dispatch(members_list, variable):
-    deg_lists = [[] for _ in range(5)]
-    #Dispatch by degree
+    deg_dict = {}
     for member in members_list:
-        if "^4" in member:
-            deg_lists[4].append(member)
-        elif "^3" in member:
-            deg_lists[3].append(member)
-        elif "^2" in member:
-            deg_lists[2].append(member)
-        elif ("^1" in member or not ("^" in member)) and variable in member:
-            deg_lists[1].append(member)
-        elif "^0" in member or (not ("^" in member) and not (variable in member)):
-            deg_lists[0].append(member)
-        else:
-            return ([])
+        if "^" in member:
+            power, start = ft_get_power(member, variable)
+            if str(power) not in deg_dict:
+                deg_dict[str(power)] = []
+            deg_dict[str(power)].append(member)
+        elif variable in member:
+            if "1.0" not in deg_dict:
+                deg_dict["1.0"] = []
+            deg_dict["1.0"].append(member)
+        elif variable not in member:
+            if "0.0" not in deg_dict:
+                deg_dict["0.0"] = []
+            deg_dict["0.0"].append(member)
+    key_list = []
+    deg_lists = []
+    for key in sorted(deg_dict.keys()):
+        key_list.append(key)
+        deg_lists.append(deg_dict[key])
+    
     #Sum_up by degrees
-    sums_list = [None for _ in range(5)]
+    sums_list = [None for _ in range(len(deg_lists))]
     ordered_list = []
-    for deg in range(4, -1, -1):
-        sums_list[deg] = ft_sum(deg_lists[deg], variable, deg)
+    for deg in range(len(deg_lists)-1, -1, -1):
+        sums_list[deg] = ft_sum(deg_lists[deg], variable,\
+                                int(key_list[deg].split(".")[0]))
         if sums_list[deg]:
             ordered_list.append(sums_list[deg])
     #If Null result

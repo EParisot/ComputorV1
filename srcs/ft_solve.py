@@ -12,7 +12,7 @@ def solve_in_C(discr, tab, variable):
                 " - " + str(round(ft_sqrt(-1 * discr) / (2 * tab[0]), 2)) + "i"
     return (conj_res)
 
-def ft_discriminator(reduced, variable):
+def ft_discriminant(reduced, variable):
     tab = [0, 0, 0]
 
     splited = ft_split_sum(reduced.split("=")[0], variable)
@@ -68,7 +68,7 @@ def ft_solve(reduced, variable, deg):
     if deg == 1:
         result = ft_solve_deg_1(reduced, variable)
     elif deg == 2:
-        discr, tab = ft_discriminator(reduced, variable)
+        discr, tab = ft_discriminant(reduced, variable)
         if discr >= 0:
             roots = ft_find_roots(discr, tab, variable)
             for i, root in enumerate(roots):

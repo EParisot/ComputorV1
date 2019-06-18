@@ -18,7 +18,7 @@ class Calc(object):
                         "([a-zA-Z][0-9])",      # letter followed by digit
                         "[+\-*/\^]$",           # operator followed by power
                         "^[*/\^]",              # division followed by power
-                        "[a-zA-Z][\^][0-9][.]"  # floating point power
+                        "[a-zA-Z][\^][0-9][.]"  # floating point var power
                         ]
 
     def degree(self, reduced):
@@ -112,14 +112,14 @@ class Calc(object):
                     exit(0)
                 else:
                     return (False)
-        if re.search("([a-zA-Z][\^][5-9])", equation) or \
+        '''if re.search("([a-zA-Z][\^][5-9])", equation) or \
                         re.search("([a-zA-Z][\^][0-9]{2})", equation):
             if gui == False:
                 print("Error: Too high degree")
                 exit(0)
             else:
                 return (False)
-            return (False)
+            return (False)'''
         if re.search("([\^][a-zA-Z])", equation):
             if gui == False:
                 print("Error: Variable power not allowed")

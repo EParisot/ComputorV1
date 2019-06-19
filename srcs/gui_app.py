@@ -198,7 +198,6 @@ class App(tk.Tk):
                         var_value = str(val)
                     reduced_left = reduced_left.replace(variable, var_value)
             return calc.calcul(reduced_left, True)
-
         res_tab = self.result.get().split(" ")
         if len(res_tab) == 1:
             min = -10
@@ -272,7 +271,7 @@ class App(tk.Tk):
                 result_val = tk.Label(self.infos_frame, textvariable=self.result, font=18)
                 result_val.grid(row=3, column=1)
 
-                if self.result != None:
+                if self.result != None and "None" not in self.reduced.get():
                     self.show_graph(self.reduced.get(), calc)
 
             else:

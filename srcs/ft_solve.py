@@ -38,7 +38,7 @@ def ft_discriminant(reduced, variable):
 def ft_find_roots(discr, tab, variable):
     roots = []
     if discr == 0:
-        root = -(tab[1] / 2 * tab[0])
+        root = -(tab[1] / (2 * tab[0]))
         roots.append(str(root))
     else:
         squared_discr = ft_sqrt(discr)

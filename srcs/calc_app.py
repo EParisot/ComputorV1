@@ -19,6 +19,7 @@ class Calc(object):
                         "[+\-*/\^]$",           # operator followed by power
                         "^[*/\^]",              # division followed by power
                         "[a-zA-Z][\^]\d+\.\d+", # floating point var power
+                        "[a-zA-Z][\^][-]"       # negatives power
                         ]
 
     def degree(self, reduced):

@@ -184,21 +184,12 @@ class App(tk.Tk):
             i += step
 
     def show_graph(self, reduced, calc):
-        fig = Figure(figsize=(5, 5), dpi=100)
-        a = fig.add_subplot(111)
-
-        def f(val):
-            variable = calc.variable
-            reduced_left = reduced.split("=")[0]
-            for i, char in enumerate(reduced_left):
-                if char == variable:
-                    if i != 0 and reduced_left[i-1:i].isdigit():
-                        var_value = "*" + str(val)
-                    else:
-                        var_value = str(val)
-                    reduced_left = reduced_left.replace(variable, var_value)
-            return calc.calcul(reduced_left, True)
         res_tab = self.result.get().split(" ")
+        if "None" in res_tab :
+            if self.graph != None:
+                self.graph.get_tk_widget().destroy()
+            return
+
         if len(res_tab) == 1:
             min = -10
             max = 10
@@ -212,8 +203,26 @@ class App(tk.Tk):
             min = -10
             max = +10
 
+        def f(val):
+            variable = calc.variable
+            reduced_left = list(reduced.split("=")[0])
+            for i, char in enumerate(reduced_left):
+                if char == variable:
+                    if i != 0 and reduced_left[i-1].isdigit():
+                        var_value = "*" + str(val)
+                    if i == 0 or not reduced_left[i-1].isdigit():
+                        var_value = str(val) if str(val)[0] == "-" else "+" + str(val)
+                    reduced_left[i] = var_value
+            equation = ""
+            for elem in reduced_left:
+                equation += elem
+            return calc.calcul(equation, True)
+
         x = [elem for elem in self.frange(min, max, 0.1)]
         y = [float(f(elem)[-1]) for elem in x]
+
+        fig = Figure(figsize=(5, 5), dpi=100)
+        a = fig.add_subplot(111)
 
         a.plot(x, y)
 

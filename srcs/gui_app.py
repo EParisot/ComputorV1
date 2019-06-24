@@ -190,7 +190,7 @@ class App(tk.Tk):
             if self.graph != None:
                 self.graph.get_tk_widget().destroy()
             return
-        
+
         if len(res_tab) == 1:
             min = -10
             max = 10

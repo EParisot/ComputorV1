@@ -185,7 +185,8 @@ class App(tk.Tk):
 
     def show_graph(self, reduced, calc):
         res_tab = self.result.get().split(" ")
-        if "None" in res_tab :
+
+        if "None" in res_tab and ("in" not in res_tab and "C" not in res_tab):
             if self.graph != None:
                 self.graph.get_tk_widget().destroy()
             return

@@ -11,20 +11,20 @@ class Calc(object):
     def __init__(self):
         self.sum_list = []
         self.variable = "None"
-        self.filters = ["([*/][*/])",           # chained //
-                        "([*/][+\-]{2})",       # * or / before - or +
-                        "([+-][*/])",           # - or + before * or /
-                        "([a-zA-Z][a-zA-Z])",   # letter followed by letter
-                        "([a-zA-Z][0-9])",      # letter followed by digit
-                        "[+\-*/\^]$",           # operator followed by power
-                        "^[*/\^]",              # division followed by power
-                        "[a-zA-Z][\^]\d+\.\d+", # floating point var power
-                        "[a-zA-Z][\^][-]"       # negatives power
+        self.filters = [r"([*/][*/])",           # chained //
+                        r"([*/][+\-]{2})",       # * or / before - or +
+                        r"([+-][*/])",           # - or + before * or /
+                        r"([a-zA-Z][a-zA-Z])",   # letter followed by letter
+                        r"([a-zA-Z][0-9])",      # letter followed by digit
+                        r"[+\-*/\^]$",           # operator followed by power
+                        r"^[*/\^]",              # division followed by power
+                        r"[a-zA-Z][\^]\d+\.\d+", # floating point var power
+                        r"[a-zA-Z][\^][-]"       # negatives power
                         ]
 
     def degree(self, reduced):
         if self.variable != "None":
-            if re.search("([a-zA-Z][\^][2-9])", reduced):
+            if re.search(r"([a-zA-Z][\^][2-9])", reduced):
                 for idx, char in enumerate(reduced):
                     if char == "^":
                         degree_val = int(reduced[idx + 1])
@@ -80,11 +80,9 @@ class Calc(object):
 
     def parse(self, equation, gui):
         if len(equation) == 0:
-            if gui == False:
-                print("Error: Empty input")
-                exit(0)
-            return (False)
-        if re.match("^[a-zA-Z0-9.+\-/*\^= ]+$", equation) and \
+            print("Error: Empty input")
+            exit(0)
+        if re.match(r"^[a-zA-Z0-9.+\-/*\^= ]+$", equation) and \
            all(not re.search(filt, equation) for filt in self.filters):
             equation = equation.replace(",", ".")
             if self.check(equation, gui) == True:
@@ -92,10 +90,8 @@ class Calc(object):
             else:
                 return (False)
         else:
-            if gui == False:
-                print("Error: Invalid input")
-                exit(0)
-            return (False)
+            print("Error: Invalid input")
+            exit(0)
 
     def check(self, equation, gui):
         for char in equation:
@@ -114,7 +110,7 @@ class Calc(object):
                     exit(0)
                 else:
                     return (False)
-        if re.search("([\^][a-zA-Z])", equation):
+        if re.search(r"([\^][a-zA-Z])", equation):
             if gui == False:
                 print("Error: Variable power not allowed")
                 exit(0)

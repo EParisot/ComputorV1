@@ -191,18 +191,18 @@ class App(tk.Tk):
                 self.graph.get_tk_widget().destroy()
             return
 
-        if len(res_tab) == 1:
-            min = -10
-            max = 10
-        elif len(res_tab) == 5:
+        if len(res_tab) == 5:
             min = round(float(res_tab[1]), 2) - 10
             max = round(float(res_tab[4]), 2) + 10
+            roots = [float(res_tab[1]), float(res_tab[4])]
         elif len(res_tab) == 2:
             min = round(float(res_tab[1]), 2) - 10
             max = round(float(res_tab[1]), 2) + 10
+            roots = [float(res_tab[1])]
         else:
             min = -10
             max = +10
+            roots = []
 
         def f(val):
             variable = calc.variable
@@ -226,6 +226,9 @@ class App(tk.Tk):
         a = fig.add_subplot(111)
 
         a.plot(x, y)
+        if len(roots):
+            a.scatter(roots, [0] * len(roots), c="r")
+
 
         a.axhline(0, color='black')
         a.axvline(0, color='black')

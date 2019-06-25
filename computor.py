@@ -28,13 +28,14 @@ if __name__ == "__main__":
                 equation = arg
         if equation:
             equation = calc.parse(equation, gui)
-            if gui:
-                App(equation).mainloop()
-                exit(0)
+            if equation:
+                if gui:
+                    App(equation).mainloop()
+                    exit(0)
 
-            else:
-                calc.calcul(equation, gui)
-                exit(0)
+                else:
+                    calc.calcul(equation, gui)
+                    exit(0)
         elif gui:
             App("").mainloop()
             exit(0)

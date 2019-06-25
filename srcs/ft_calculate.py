@@ -60,7 +60,7 @@ def ft_dispatch(members_list, variable):
     deg_dict = {}
     for member in members_list:
         if "^" in member:
-            power, start = ft_get_power(member, variable)
+            power, _ = ft_get_power(member, variable)
             if str(power) not in deg_dict:
                 deg_dict[str(power)] = []
             deg_dict[str(power)].append(member)
@@ -141,7 +141,7 @@ def ft_power(l_member, r_member, prefix):
 
 def ft_split_power(members_list):
     for idx, fact in enumerate(members_list):
-        if "^" in fact and not (re.search("([a-zA-Z][\^])", fact)):
+        if "^" in fact and not (re.search(r"([a-zA-Z][\^])", fact)):
             i = 0
             j = 0
             for char in fact:
@@ -305,7 +305,7 @@ def ft_iseven_par(member):
 def clean_zeros(member_list, variable):
     for i, elem in enumerate(member_list):
         if variable + "^0.0" in elem:
-            var_pow, start = ft_get_power(elem, variable)
+            _, start = ft_get_power(elem, variable)
             member_list[i] = elem[:start-2]
     return member_list
 
